@@ -1,0 +1,4 @@
+{
+  "cmake.sourceDirectory": "${workspaceFolder}/linux",
+  "cSpell.words": ["fintrack", "Glassmorphic"]
+}

@@ -1,0 +1,149 @@
+import 'package:fab_circular_menu/fab_circular_menu.dart';
+import 'package:fintrack/src/core/theme/app_color.dart';
+import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+
+class FabButton extends StatelessWidget {
+  const FabButton({
+    Key? key,
+    required this.theme,
+  }) : super(key: key);
+
+  final ThemeMode theme;
+
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    bool screenSize =
+        (width > 300 || width < 400) || (height >= 640 || height <= 700);
+    bool bottomHeight = height > 860;
+    bool bottomHeight2 = height >= 800 || height < 700;
+    bool widthAndHeight = height >= 870 || width < 415;
+    bool fabSize = width > 300 || (height >= 640 || height <= 860);
+    return FabCircularMenu(
+      alignment: Alignment.bottomCenter,
+      ringDiameter: 300,
+      ringColor: theme == ThemeMode.dark
+          ? const Color(0xff1f3341).withOpacity(0.45)
+          : Colors.black.withOpacity(0.1),
+      ringWidth: 100,
+      fabOpenIcon: const Icon(Icons.add, color: AppColor.white),
+      fabCloseIcon: const Icon(Icons.close, color: AppColor.white),
+      fabColor: theme == ThemeMode.dark
+          ? const Color(0xff2febea).withOpacity(0.3)
+          : null,
+      fabMargin: screenSize
+          ? EdgeInsets.only(
+              bottom: bottomHeight ? 30 : (bottomHeight2 ? 54 : 23),
+              right: bottomHeight ? 27 : 27,
+            )
+          : EdgeInsets.only(
+              bottom: widthAndHeight ? 23 : 65,
+              right: 23.8,
+            ),
+      fabSize: fabSize ? 50 : 60,
+      children: [
+        FabChildren(
+          children: [
+            FabWidget(
+              color: const Color(0xff05aa6d),
+              icon: PhosphorIcons.exportLight,
+              onTap: () {},
+            ),
+            Text(
+              'Transactions',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    fontSize: 9,
+                  ),
+              maxLines: 1,
+            )
+          ],
+        ),
+        FabChildren(children: [
+          FabWidget(
+            color: const Color(0XFF7d42ca),
+            icon: PhosphorIcons.walletLight,
+            onTap: (() {}),
+          ),
+          Text(
+            'Budgets',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  fontSize: 9,
+                ),
+            maxLines: 1,
+          )
+        ]),
+        FabChildren(children: [
+          FabWidget(
+            color: const Color(0xffFF6B07),
+            icon: PhosphorIcons.notePencil,
+            onTap: (() {}),
+          ),
+          Text(
+            'Make Notes',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  fontSize: 9,
+                ),
+            maxLines: 1,
+          )
+        ]),
+      ],
+    );
+  }
+}
+
+class FabChildren extends StatelessWidget {
+  const FabChildren({
+    Key? key,
+    required this.children,
+  }) : super(key: key);
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 60,
+      width: 60,
+      child: Column(
+        children: children,
+      ),
+    );
+  }
+}
+
+class FabWidget extends StatelessWidget {
+  const FabWidget({
+    Key? key,
+    required this.color,
+    required this.icon,
+    required this.onTap,
+  }) : super(key: key);
+
+  final Color color;
+  final IconData icon;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        splashColor: Colors.transparent,
+        child: Container(
+            height: 60,
+            width: 60,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              icon,
+              size: 25,
+              color: Colors.white,
+            )),
+      ),
+    );
+  }
+}
