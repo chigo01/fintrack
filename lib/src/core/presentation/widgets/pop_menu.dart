@@ -1,6 +1,7 @@
 import 'package:fintrack/src/core/domain/pop_menu_items.dart';
 import 'package:fintrack/src/core/presentation/controllers/themechanges.dart';
-import 'package:fintrack/src/core/route/routes.dart';
+import 'package:fintrack/src/core/route/route_navigations.dart';
+
 import 'package:fintrack/src/features/Profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,15 +40,9 @@ class _PopMenuWidgetState extends State<PopMenuWidget> {
       onSelected: (PopMenuItems value) {
         switch (value.name) {
           case 'profile':
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const Profile(),
-              ),
-            );
+            context.pushTransition(const Profile());
             break;
           case 'Notifications':
-            AppRoute.generate;
             break;
 
           case 'LightMode':

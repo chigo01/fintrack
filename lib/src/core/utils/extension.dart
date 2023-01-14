@@ -15,4 +15,11 @@ extension ContextExtension on BuildContext {
   double get width => getWidth();
 }
 
-
+extension WidgetExtension on Widget {
+  GestureDetector onTap(VoidCallback action) {
+    return GestureDetector(
+      onTap: action,
+      child: this,
+    );
+  }
+}

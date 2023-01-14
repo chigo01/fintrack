@@ -1,11 +1,14 @@
+import 'package:animations/animations.dart';
 import 'package:fintrack/src/core/presentation/controllers/themechanges.dart';
 import 'package:fintrack/src/core/presentation/widgets/fab-button.dart';
 import 'package:fintrack/src/core/presentation/widgets/nav-bar.dart';
 import 'package:fintrack/src/core/presentation/widgets/pop_menu.dart';
 import 'package:fintrack/src/features/Profile/profile.dart';
-import 'package:fintrack/src/features/ThemeChanges/theme.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../features/Transactions/theme.dart';
 
 List<Widget> pages = [
   const Profile(),
@@ -22,11 +25,11 @@ class AppActivity extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<AppActivity> {
-  int currentIndex = 0;
+  int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
-    // double width = MediaQuery.of(context).size.width;
-    // double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     final theme = ref.watch(themeProvider);
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -50,12 +53,33 @@ class _MyAppState extends ConsumerState<AppActivity> {
           ),
         ],
       ),
-      body: IndexedStack(
-        index: currentIndex,
-        children: pages,
+      body: PageTransitionSwitcher(
+          duration: const Duration(milliseconds: 1000),
+          transitionBuilder: (widget, animation, anim2) {
+            animation = CurvedAnimation(
+              parent: animation,
+              curve: Curves.fastOutSlowIn,
+              reverseCurve: Curves.fastOutSlowIn,
+            );
+            return FadeTransition(
+              opacity: animation,
+              child: widget,
+            );
+          },
+          child: IndexedStack(
+            index: _currentIndex,
+            key: ValueKey<int>(_currentIndex),
+            children: pages,
+          )),
+      bottomNavigationBar: GlassMorphicNavBar(
+        theme: theme,
+        currentIndex: _currentIndex,
+        unchanged: (value) => setState(
+          () {
+            _currentIndex = value;
+          },
+        ),
       ),
-      bottomNavigationBar:
-          GlassMorphicNavBar(theme: theme, currentIndex: currentIndex),
     );
   }
 }

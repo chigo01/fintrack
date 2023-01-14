@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static final AppTextStyle _textStyle = AppTextStyle.instance;
+
   static ThemeData dark = ThemeData(
     brightness: Brightness.dark,
     primaryColor: AppColor.primaryColor,
-
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -44,6 +44,7 @@ class AppTheme {
   static ThemeData light = ThemeData(
     brightness: Brightness.light,
     // backgroundColor: AppColor.black,
+
     scaffoldBackgroundColor: Colors.white,
     primaryColor: AppColor.primaryColor,
     appBarTheme: const AppBarTheme(
@@ -53,23 +54,23 @@ class AppTheme {
     ),
     iconTheme: const IconThemeData(color: Colors.black),
     popupMenuTheme: PopupMenuThemeData(
-      color: Colors.white.withOpacity(0.2),
+      color: Colors.black.withOpacity(0.1), // Colors.white.withOpacity(0.2),
       elevation: 1,
     ),
     textTheme: TextTheme(
       displayLarge: _textStyle.displayLarge.copyWith(color: Colors.black),
       displayMedium: _textStyle.displayMedium.copyWith(color: Colors.black),
-      displaySmall: _textStyle.displaySmall.copyWith(color: AppColor.black),
-      headlineLarge: _textStyle.headlineLarge.copyWith(color: AppColor.black),
-      headlineMedium: _textStyle.headlineMedium.copyWith(color: AppColor.black),
-      headlineSmall: _textStyle.headlineSmall.copyWith(color: AppColor.black),
-      titleLarge: _textStyle.titleLarge.copyWith(color: AppColor.black),
-      titleSmall: _textStyle.titleSmall.copyWith(color: AppColor.black),
-      titleMedium: _textStyle.titleMedium.copyWith(color: AppColor.black),
-      labelLarge: _textStyle.labelLarge.copyWith(color: AppColor.black),
-      labelMedium: _textStyle.labelMedium.copyWith(color: AppColor.black),
-      labelSmall: _textStyle.labelSmall.copyWith(color: AppColor.black),
-      bodyLarge: _textStyle.bodyLarge.copyWith(color: AppColor.black),
+      displaySmall: _textStyle.displaySmall.copyWith(color: Colors.black),
+      headlineLarge: _textStyle.headlineLarge.copyWith(color: Colors.black),
+      headlineMedium: _textStyle.headlineMedium.copyWith(color: Colors.black),
+      headlineSmall: _textStyle.headlineSmall.copyWith(color: Colors.black),
+      titleLarge: _textStyle.titleLarge.copyWith(color: Colors.black),
+      titleSmall: _textStyle.titleSmall.copyWith(color: Colors.black),
+      titleMedium: _textStyle.titleMedium.copyWith(color: Colors.black),
+      labelLarge: _textStyle.labelLarge.copyWith(color: Colors.black),
+      labelMedium: _textStyle.labelMedium.copyWith(color: Colors.black),
+      labelSmall: _textStyle.labelSmall.copyWith(color: Colors.black),
+      bodyLarge: _textStyle.bodyLarge.copyWith(color: Colors.black),
       bodyMedium: _textStyle.bodyMedium.copyWith(color: Colors.black),
       bodySmall: _textStyle.bodySmall.copyWith(color: Colors.black),
     ),

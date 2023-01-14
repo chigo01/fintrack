@@ -75,6 +75,9 @@ class Profile extends ConsumerWidget {
                     width: 300,
                     borderWidth: 2,
                     borderColor: Colors.white30,
+                    child: Center(
+                        child: Text(
+                            '${MediaQuery.of(context).devicePixelRatio} and ${MediaQuery.of(context).size.aspectRatio}')),
                   ),
                   // const SizedBox(height: 10),
                   // GlassMorphic(

@@ -4,29 +4,25 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../widgets/glass_container.dart';
 
-// ignore: must_be_immutable
-class GlassMorphicNavBar extends StatefulWidget {
-  GlassMorphicNavBar({
+class GlassMorphicNavBar extends StatelessWidget {
+  const GlassMorphicNavBar({
     Key? key,
     required this.theme,
     required this.currentIndex,
+    required this.unchanged,
   }) : super(key: key);
 
   final ThemeMode theme;
-  int currentIndex;
+  final int currentIndex;
+  final ValueChanged<int> unchanged;
 
-  @override
-  State<GlassMorphicNavBar> createState() => _GlassMorphicNavBarState();
-}
-
-class _GlassMorphicNavBarState extends State<GlassMorphicNavBar> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
     return GlassMorphic(
-      mode: widget.theme,
+      mode: theme,
       height: context.getHeight(0.07),
       width: context.getWidth(0.3),
       borderWidth: 2,
@@ -34,57 +30,58 @@ class _GlassMorphicNavBarState extends State<GlassMorphicNavBar> {
       margin: const EdgeInsets.all(15),
       borderColor: Colors.transparent,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ...List.generate(
             _bottomNavigationBarItems.length,
             (index) {
-              bool indexCheck = index == widget.currentIndex;
+              bool indexCheck = index == currentIndex;
+              _Item elementAt = _bottomNavigationBarItems[index];
               return InkWell(
-                onTap: () {
-                  setState(() {
-                    widget.currentIndex = index;
-                  });
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: AnimatedContainer(
-                        duration: const Duration(seconds: 1),
-                        curve: Curves.fastLinearToSlowEaseIn,
-                        margin: EdgeInsets.only(
+                onTap: () => unchanged(index),
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 25, left: 25),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 1000),
+                          curve: Curves.decelerate,
+                          padding: EdgeInsets.only(
                             bottom: indexCheck ? 12 : 0,
-                            top: indexCheck ? 0 : 12),
-                        child: Icon(
-                          indexCheck
-                              ? _bottomNavigationBarItems[index].activeIcon
-                              : _bottomNavigationBarItems[index].icon,
+                            top: indexCheck ? 0 : 12,
+                            left: indexCheck ? 0 : 3,
+                          ),
+                          child: Icon(
+                            indexCheck ? elementAt.activeIcon : elementAt.icon,
 
-                          color: widget.theme == ThemeMode.dark
-                              ? indexCheck
-                                  ? Colors.white
-                                  : const Color(0xff858b92)
-                              : Theme.of(context).primaryColor,
-                          // size: 13.4,
+                            color: theme == ThemeMode.dark
+                                ? indexCheck
+                                    ? Colors.white
+                                    : const Color(0xff858b92)
+                                : Theme.of(context).primaryColor,
+                            // size: 13.4,
+                          ),
                         ),
                       ),
-                    ),
-                    // SizedBox(height: 6),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: index == widget.currentIndex ? 6.0 : 0,
+                      // SizedBox(height: 6),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: index == currentIndex ? 6.0 : 0,
+                        ),
+                        child: Text(
+                          indexCheck ? elementAt.label : '',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(
+                                fontSize: width < 400 && height < 700 ? 6 : 10,
+                              ),
+                        ),
                       ),
-                      child: Text(
-                        indexCheck
-                            ? _bottomNavigationBarItems[index].label
-                            : '',
-                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                              fontSize: width < 400 && height < 700 ? 6 : 10,
-                            ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },
@@ -95,7 +92,7 @@ class _GlassMorphicNavBarState extends State<GlassMorphicNavBar> {
   }
 }
 
-const _bottomNavigationBarItems = [
+const List<_Item> _bottomNavigationBarItems = [
   _Item(
     'Home',
     icon: PhosphorIcons.house,
@@ -108,8 +105,8 @@ const _bottomNavigationBarItems = [
   ),
   _Item(
     'budgets',
-    icon: PhosphorIcons.cardholder,
-    activeIcon: PhosphorIcons.cardholderFill,
+    icon: PhosphorIcons.walletLight,
+    activeIcon: PhosphorIcons.walletFill,
   ),
   _Item(
     'Notes',

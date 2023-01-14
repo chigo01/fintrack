@@ -2,12 +2,11 @@ import 'package:device_preview/device_preview.dart';
 import 'package:fintrack/src/core/presentation/app.dart';
 import 'package:fintrack/src/core/presentation/controllers/themechanges.dart';
 import 'package:fintrack/src/core/theme/app_theme.dart';
-
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 
 Future<void> main() async {
   Paint.enableDithering = true;
@@ -20,12 +19,12 @@ Future<void> main() async {
   );
 
   runApp(
-    const ProviderScope(
-      // child: DevicePreview(
-      //   enabled: !kReleaseMode,
-      //   builder: (BuildContext context) => const MyApp(),
-      // ),
-     child: MyApp(),
+    ProviderScope(
+      child: DevicePreview(
+        enabled: !kReleaseMode,
+        builder: (BuildContext context) => const MyApp(),
+      ),
+      // child: MyApp(),
     ),
   );
 }

@@ -1,5 +1,8 @@
 import 'package:fab_circular_menu/fab_circular_menu.dart';
+import 'package:fintrack/src/core/route/route_navigations.dart';
 import 'package:fintrack/src/core/theme/app_color.dart';
+import 'package:fintrack/src/features/Transactions/presentation/transaction_entry.dart';
+import 'package:fintrack/src/features/Transactions/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -15,12 +18,10 @@ class FabButton extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    bool screenSize =
-        (width > 300 || width < 400) || (height >= 640 || height <= 700);
-    bool bottomHeight = height > 860;
-    bool bottomHeight2 = height >= 800 || height < 700;
-    bool widthAndHeight = height >= 870 || width < 415;
+
     bool fabSize = width > 300 || (height >= 640 || height <= 860);
+    double devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
+    double aspectRatio = MediaQuery.of(context).size.aspectRatio;
     return FabCircularMenu(
       alignment: Alignment.bottomCenter,
       ringDiameter: 300,
@@ -33,15 +34,18 @@ class FabButton extends StatelessWidget {
       fabColor: theme == ThemeMode.dark
           ? const Color(0xff2febea).withOpacity(0.3)
           : null,
-      fabMargin: screenSize
-          ? EdgeInsets.only(
-              bottom: bottomHeight ? 30 : (bottomHeight2 ? 54 : 23),
-              right: bottomHeight ? 27 : 27,
-            )
-          : EdgeInsets.only(
-              bottom: widthAndHeight ? 23 : 65,
-              right: 23.8,
-            ),
+      fabMargin: EdgeInsets.only(
+        // bottom: bottomHeight ? 30 : (bottomHeight2 ? 54 : 23),
+        // right: bottomHeight ? 27 : 27,
+        bottom: devicePixelRatio >= 3
+            ? (devicePixelRatio >= 3.5 &&
+                    aspectRatio >= 0.43 &&
+                    aspectRatio <= 0.5)
+                ? 40
+                : 69
+            : (devicePixelRatio <= 2.9 && devicePixelRatio > 2 ? 30 : 54),
+        right: 27,
+      ),
       fabSize: fabSize ? 50 : 60,
       children: [
         FabChildren(
@@ -49,7 +53,7 @@ class FabButton extends StatelessWidget {
             FabWidget(
               color: const Color(0xff05aa6d),
               icon: PhosphorIcons.exportLight,
-              onTap: () {},
+              onTap: () => context.push(const AddTransactionsScreen()),
             ),
             Text(
               'Transactions',
@@ -78,10 +82,13 @@ class FabButton extends StatelessWidget {
           FabWidget(
             color: const Color(0xffFF6B07),
             icon: PhosphorIcons.notePencil,
-            onTap: (() {}),
+            onTap: (() {
+              context.push(const LightMode());
+              // context.maybePop();
+            }),
           ),
           Text(
-            'Make Notes',
+            'Notes',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   fontSize: 9,
                 ),

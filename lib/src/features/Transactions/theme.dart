@@ -8,8 +8,6 @@ import '../../core/utils/background-dec.dart';
 class LightMode extends ConsumerWidget {
   const LightMode({super.key});
 
-
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.watch(themeProvider);
@@ -49,8 +47,7 @@ class LightMode extends ConsumerWidget {
                   width: 300,
                   borderWidth: 2,
                   borderColor: Colors.white30,
-                  child:
-                  Center(child: Text('${MediaQuery.of(context).size}')),
+                  child: Center(child: Text('${MediaQuery.of(context).size}')),
                 ),
                 const SizedBox(height: 10),
                 GlassMorphic(
@@ -61,8 +58,8 @@ class LightMode extends ConsumerWidget {
                   borderWidth: 2,
                   borderColor: Colors.white30,
                   child: Center(
-                      child: Text(
-                          '${const Size(54, 78) >= const Size(23, 54)}')),
+                      child:
+                          Text('${const Size(54, 78) >= const Size(23, 54)}')),
                 ),
                 const SizedBox(height: 10),
                 GlassMorphic(
@@ -72,6 +69,11 @@ class LightMode extends ConsumerWidget {
                   width: 300,
                   borderWidth: 2,
                   borderColor: Colors.white30,
+                  child: Center(
+                    child: Text(
+                      DateTime.now().toIso8601String(),
+                    ),
+                  ),
                 ),
                 // const SizedBox(height: 10),
                 // GlassMorphic(
