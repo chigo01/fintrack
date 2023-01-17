@@ -1,6 +1,7 @@
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:fintrack/src/core/route/route_navigations.dart';
 import 'package:fintrack/src/core/theme/app_color.dart';
+import 'package:fintrack/src/core/utils/extension.dart';
 import 'package:fintrack/src/features/Transactions/presentation/transaction_entry.dart';
 import 'package:fintrack/src/features/Transactions/theme.dart';
 import 'package:flutter/material.dart';
@@ -22,12 +23,11 @@ class FabButton extends StatelessWidget {
     bool fabSize = width > 300 || (height >= 640 || height <= 860);
     double devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
     double aspectRatio = MediaQuery.of(context).size.aspectRatio;
+    bool themeCheck = theme == ThemeMode.dark;
     return FabCircularMenu(
       alignment: Alignment.bottomCenter,
       ringDiameter: 300,
-      ringColor: theme == ThemeMode.dark
-          ? const Color(0xff1f3341).withOpacity(0.45)
-          : Colors.black.withOpacity(0.1),
+      ringColor: themeCheck.color,
       ringWidth: 100,
       fabOpenIcon: const Icon(Icons.add, color: AppColor.white),
       fabCloseIcon: const Icon(Icons.close, color: AppColor.white),

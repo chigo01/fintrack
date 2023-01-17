@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/presentation/controllers/themechanges.dart';
-import '../../core/utils/background-dec.dart';
 
 class Profile extends ConsumerWidget {
   const Profile({super.key});
@@ -17,9 +16,9 @@ class Profile extends ConsumerWidget {
     return Scaffold(
       key: scaffoldState,
       body: Container(
-        decoration: theme == ThemeMode.dark
-            ? backgroundColor()
-            : const BoxDecoration(color: Colors.white),
+        // decoration: theme == ThemeMode.dark
+        //     ? backgroundColor()
+        //     : const BoxDecoration(color: Colors.white),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[

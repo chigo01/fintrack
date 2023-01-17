@@ -58,7 +58,7 @@ class GlassMorphicNavBar extends StatelessWidget {
 
                             color: theme == ThemeMode.dark
                                 ? indexCheck
-                                    ? Colors.white
+                                    ? const Color(0xff508cf3)
                                     : const Color(0xff858b92)
                                 : Theme.of(context).primaryColor,
                             // size: 13.4,

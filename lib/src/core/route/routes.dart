@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 class PageRouter {
   static Route<T> fadeTransition<T>(Widget page) {
     return PageRouteBuilder<T>(
-      transitionDuration: const Duration(milliseconds: 1500),
+      transitionDuration: const Duration(milliseconds: 700),
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         animation = CurvedAnimation(

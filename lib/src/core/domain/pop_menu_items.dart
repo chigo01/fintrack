@@ -32,17 +32,17 @@ List<PopMenuItems> popMenuItems = [
   const PopMenuItems(
     name: 'profile',
     iconName: Icons.person_outline,
-    color: Colors.black,
+    color: Colors.white,
   ),
   const PopMenuItems(
     name: 'Notifications',
     iconName: Icons.notifications_outlined,
-    color: Colors.black,
+    color: Colors.white,
   ),
   const PopMenuItems(
     name: 'LightMode',
     iconName: Icons.light_mode_outlined,
-    color: Colors.black,
+    color: Colors.white,
   ),
   // const PopMenuItems(
   //   name: 'settings',

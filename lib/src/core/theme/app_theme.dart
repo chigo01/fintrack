@@ -7,7 +7,9 @@ class AppTheme {
 
   static ThemeData dark = ThemeData(
     brightness: Brightness.dark,
-    primaryColor: AppColor.primaryColor,
+    primaryColor: AppColor.darkPrimaryColor, //const Color(0xff508cf3),
+
+    scaffoldBackgroundColor: const Color(0xff0d1116),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -21,6 +23,10 @@ class AppTheme {
     popupMenuTheme: PopupMenuThemeData(
       color: AppColor.secondaryColors[1].withOpacity(0.2),
       elevation: 3,
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      fillColor: AppColor.primaryColor.withOpacity(0.2), //Color(0xff161c23),
+      filled: false,
     ),
     textTheme: TextTheme(
       displayLarge: _textStyle.displayLarge,
@@ -43,8 +49,10 @@ class AppTheme {
 
   static ThemeData light = ThemeData(
     brightness: Brightness.light,
-    // backgroundColor: AppColor.black,
-
+    inputDecorationTheme: InputDecorationTheme(
+      fillColor: AppColor.primaryColor.withOpacity(0.2),
+      filled: false,
+    ),
     scaffoldBackgroundColor: Colors.white,
     primaryColor: AppColor.primaryColor,
     appBarTheme: const AppBarTheme(
@@ -55,7 +63,7 @@ class AppTheme {
     iconTheme: const IconThemeData(color: Colors.black),
     popupMenuTheme: PopupMenuThemeData(
       color: Colors.black.withOpacity(0.1), // Colors.white.withOpacity(0.2),
-      elevation: 1,
+      elevation: 3,
     ),
     textTheme: TextTheme(
       displayLarge: _textStyle.displayLarge.copyWith(color: Colors.black),

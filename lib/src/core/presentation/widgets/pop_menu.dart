@@ -51,6 +51,7 @@ class _PopMenuWidgetState extends State<PopMenuWidget> {
         }
       },
       constraints: const BoxConstraints(maxHeight: 245, maxWidth: 190),
+      color: Theme.of(context).primaryColor.withOpacity(0.3),
       tooltip: "Profile Menu",
       position: PopupMenuPosition.under,
       shape: RoundedRectangleBorder(
@@ -98,7 +99,7 @@ PopupMenuItem<PopMenuItems> popItems({
       children: [
         Icon(
           indexAt == popMenuItems[index]
-              ? (watchTheme == ThemeMode.dark
+              ? (themeChecker
                   ? popMenuItems[index].iconName
                   : Icons.dark_mode_outlined)
               : popMenuItems[index].iconName,
@@ -118,7 +119,10 @@ PopupMenuItem<PopMenuItems> popItems({
                 : popMenuItems[index].name,
             style: themeChecker
                 ? Theme.of(context).textTheme.bodyMedium
-                : Theme.of(context).textTheme.bodyMedium,
+                : Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: Colors.white),
           ),
         ),
       ],

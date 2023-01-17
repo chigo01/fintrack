@@ -3,17 +3,18 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class GlassMorphic extends StatelessWidget {
-  const GlassMorphic({
-    Key? key,
-    required this.mode,
-    required this.border,
-    required this.height,
-    required this.width,
-    this.borderWidth,
-    this.child,
-    this.boxShadow,
-    this.margin, required this.borderColor
-  }) : super(key: key);
+  const GlassMorphic(
+      {Key? key,
+      required this.mode,
+      required this.border,
+      required this.height,
+      required this.width,
+      this.borderWidth,
+      this.child,
+      this.boxShadow,
+      this.margin,
+      required this.borderColor})
+      : super(key: key);
 
   final ThemeMode mode;
   final BorderRadiusGeometry border;
@@ -40,18 +41,14 @@ class GlassMorphic extends StatelessWidget {
           width: width,
           margin: margin,
           decoration: BoxDecoration(
-            // backgroundBlendMode: BlendMode.lighten,
-            borderRadius: border,
-            boxShadow: boxShadow,
-            border: Border.all(
-              width: borderWidth ?? 0,
-              color: borderColor,
-            ),
-            color: themeChecker
-                ?  const Color(0xff1f3341).withOpacity(0.45)
-                : Colors.black.withOpacity(0.1),
-
-          ),
+              // backgroundBlendMode: BlendMode.lighten,
+              borderRadius: border,
+              boxShadow: boxShadow,
+              border: Border.all(
+                width: borderWidth ?? 0,
+                color: borderColor,
+              ),
+              color: Theme.of(context).primaryColor.withOpacity(0.1)),
           child: child,
         ),
       ),

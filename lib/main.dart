@@ -19,12 +19,12 @@ Future<void> main() async {
   );
 
   runApp(
-    ProviderScope(
-      child: DevicePreview(
-        enabled: !kReleaseMode,
-        builder: (BuildContext context) => const MyApp(),
-      ),
-      // child: MyApp(),
+    const ProviderScope(
+      //     child: DevicePreview(
+      //   builder: (_) => const MyApp(),
+      //   enabled: !kReleaseMode,
+      // )
+      child: MyApp(),
     ),
   );
 }
