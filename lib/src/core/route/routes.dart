@@ -3,12 +3,12 @@ import 'package:flutter/cupertino.dart';
 class PageRouter {
   static Route<T> fadeTransition<T>(Widget page) {
     return PageRouteBuilder<T>(
-      transitionDuration: const Duration(milliseconds: 700),
+      transitionDuration: const Duration(milliseconds: 500),
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         animation = CurvedAnimation(
             parent: animation,
-            curve: Curves.fastLinearToSlowEaseIn,
+            curve: Curves.easeIn,
             reverseCurve: Curves.fastOutSlowIn);
         return FadeTransition(
           opacity: animation,
@@ -21,7 +21,7 @@ class PageRouter {
   static Route<T> slideTransition<T>(Widget page) {
     return PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => page,
-        transitionDuration: const Duration(milliseconds: 1000),
+        transitionDuration: const Duration(milliseconds: 500),
         reverseTransitionDuration: const Duration(milliseconds: 400),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           animation = CurvedAnimation(

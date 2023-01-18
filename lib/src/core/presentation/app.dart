@@ -1,5 +1,5 @@
 import 'package:animations/animations.dart';
-import 'package:fintrack/src/core/presentation/controllers/themechanges.dart';
+import 'package:fintrack/src/core/presentation/provider/themechanges.dart';
 import 'package:fintrack/src/core/presentation/widgets/fab-button.dart';
 import 'package:fintrack/src/core/presentation/widgets/nav-bar.dart';
 import 'package:fintrack/src/core/presentation/widgets/pop_menu.dart';

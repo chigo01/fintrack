@@ -1,5 +1,5 @@
 import 'package:fintrack/src/core/domain/pop_menu_items.dart';
-import 'package:fintrack/src/core/presentation/controllers/themechanges.dart';
+import 'package:fintrack/src/core/presentation/provider/themechanges.dart';
 import 'package:fintrack/src/core/route/route_navigations.dart';
 
 import 'package:fintrack/src/features/Profile/profile.dart';

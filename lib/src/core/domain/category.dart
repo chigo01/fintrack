@@ -24,13 +24,13 @@ class Category {
   final IconData icon;
   final String title;
   final Color? color;
-  final Categories category;
+  final Categories? category;
 
   const Category({
     required this.icon,
     required this.title,
     this.color,
-    required this.category,
+    this.category,
   });
 
   @override
@@ -117,5 +117,20 @@ List<Category> categories = [
     title: 'Others',
     color: Colors.grey,
     category: Categories.others,
+  ),
+];
+
+List<Category> paymentCategory = [
+  const Category(
+    icon: PhosphorIcons.money,
+    title: 'Cash',
+  ),
+  const Category(
+    icon: PhosphorIcons.wallet,
+    title: 'Wallet',
+  ),
+  const Category(
+    icon: PhosphorIcons.creditCard,
+    title: 'Card',
   ),
 ];

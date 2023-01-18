@@ -1,6 +1,6 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:fintrack/src/core/presentation/app.dart';
-import 'package:fintrack/src/core/presentation/controllers/themechanges.dart';
+import 'package:fintrack/src/core/presentation/provider/themechanges.dart';
 import 'package:fintrack/src/core/theme/app_theme.dart';
 import 'package:flutter/foundation.dart';
 

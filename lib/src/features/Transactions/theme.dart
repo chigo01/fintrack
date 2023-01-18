@@ -2,7 +2,7 @@ import 'package:fintrack/src/core/widgets/glass_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/presentation/controllers/themechanges.dart';
+import '../../core/presentation/provider/themechanges.dart';
 import '../../core/utils/background-dec.dart';
 
 class LightMode extends ConsumerWidget {
