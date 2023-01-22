@@ -12,7 +12,8 @@ class TextInput extends StatelessWidget {
     this.focusedBorder,
     this.constraints,
     this.style,
-    this.prefix,
+    this.prefixText,
+    this.prefixStyle,
   }) : super(key: key);
 
   final String hintText;
@@ -24,7 +25,8 @@ class TextInput extends StatelessWidget {
   final InputBorder? focusedBorder;
   final BoxConstraints? constraints;
   final TextStyle? style;
-  final Widget? prefix;
+  final String? prefixText;
+  final TextStyle? prefixStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,8 @@ class TextInput extends StatelessWidget {
       style: style,
       keyboardType: keyboardType,
       decoration: InputDecoration(
-        prefix: prefix,
+        prefixText: prefixText,
+        prefixStyle: prefixStyle,
         hintText: hintText,
         filled: filled,
         constraints: constraints,

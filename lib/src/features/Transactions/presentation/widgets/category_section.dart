@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:fintrack/src/core/domain/category.dart';
+import 'package:fintrack/src/core/domain/models/category.dart';
 import 'package:fintrack/src/core/utils/extension.dart';
 import 'package:fintrack/src/features/Transactions/presentation/provider/current_page_provider.dart';
 import 'package:fintrack/src/features/Transactions/presentation/transaction_entry.dart';
@@ -72,11 +72,15 @@ class CategoryWidgets extends StatelessWidget {
     required this.category,
     required this.theme,
     required this.ref,
+    required this.categories,
+    required this.stateNotifier,
   }) : super(key: key);
 
   final int category;
   final ThemeMode theme;
   final WidgetRef ref;
+  final List<Category> categories;
+  final StateProvider<String> stateNotifier;
 
   // final WidgetRef ref;
   @override
@@ -88,9 +92,9 @@ class CategoryWidgets extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
         shrinkWrap: true,
-        itemCount: paymentCategory.length,
+        itemCount: categories.length,
         itemBuilder: ((context, index) {
-          Category elements = paymentCategory.elementAt(index);
+          Category elements = categories.elementAt(index);
           bool boolIndex = category == index;
           return CategoryCard(
             boolIndex: boolIndex,
@@ -104,7 +108,7 @@ class CategoryWidgets extends StatelessWidget {
               ref.read(paymentCurrentIndex.notifier).state = index;
               ref
                   .read(
-                    paymentName.notifier,
+                    stateNotifier.notifier,
                   )
                   .update(
                     (state) => state = elements.title,

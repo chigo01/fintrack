@@ -134,3 +134,22 @@ List<Category> paymentCategory = [
     title: 'Card',
   ),
 ];
+
+List<Category> incomeCategory = [
+  const Category(
+    icon: PhosphorIcons.briefcase,
+    title: 'Salary',
+  ),
+  const Category(
+    icon: PhosphorIcons.briefcase,
+    title: 'Business',
+  ),
+  const Category(
+    icon: PhosphorIcons.briefcase,
+    title: 'Investment',
+  ),
+  const Category(
+    icon: PhosphorIcons.briefcase,
+    title: 'Gift',
+  ),
+];

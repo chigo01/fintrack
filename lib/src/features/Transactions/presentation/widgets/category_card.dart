@@ -1,4 +1,4 @@
-import 'package:fintrack/src/core/domain/category.dart';
+import 'package:fintrack/src/core/domain/models/category.dart';
 import 'package:fintrack/src/core/utils/extension.dart';
 import 'package:flutter/material.dart';
 
@@ -95,7 +95,8 @@ class CategoryCard extends StatelessWidget {
                   elements.title,
                   maxLines: 1,
                   style: Theme.of(context).textTheme.subtitle2?.copyWith(
-                      fontSize: boolIndex && context.height < 700 ? 6.7 : 8),
+                        fontSize: boolIndex && context.height < 700 ? 6.7 : 8,
+                      ),
                 ),
               ],
             ),

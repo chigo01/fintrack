@@ -1,4 +1,4 @@
-import 'package:fintrack/src/core/domain/pop_menu_items.dart';
+import 'package:fintrack/src/core/domain/models/pop_menu_items.dart';
 import 'package:fintrack/src/core/presentation/provider/themechanges.dart';
 import 'package:fintrack/src/core/route/route_navigations.dart';
 
@@ -51,7 +51,9 @@ class _PopMenuWidgetState extends State<PopMenuWidget> {
         }
       },
       constraints: const BoxConstraints(maxHeight: 245, maxWidth: 190),
-      color: Theme.of(context).primaryColor.withOpacity(0.3),
+      color: Theme.of(context)
+          .primaryColor
+          .withOpacity(widget.theme == ThemeMode.dark ? 0.1 : 0.3),
       tooltip: "Profile Menu",
       position: PopupMenuPosition.under,
       shape: RoundedRectangleBorder(

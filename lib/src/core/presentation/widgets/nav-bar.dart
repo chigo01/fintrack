@@ -9,12 +9,12 @@ class GlassMorphicNavBar extends StatelessWidget {
     Key? key,
     required this.theme,
     required this.currentIndex,
-    required this.unchanged,
+    required this.onChanged,
   }) : super(key: key);
 
   final ThemeMode theme;
   final int currentIndex;
-  final ValueChanged<int> unchanged;
+  final ValueChanged<int> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class GlassMorphicNavBar extends StatelessWidget {
               bool indexCheck = index == currentIndex;
               _Item elementAt = _bottomNavigationBarItems[index];
               return InkWell(
-                onTap: () => unchanged(index),
+                onTap: () => onChanged(index),
                 child: Padding(
                   padding: const EdgeInsets.only(right: 25, left: 25),
                   child: Column(

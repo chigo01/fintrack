@@ -1,8 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
+import 'dart:developer';
+
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:fintrack/src/core/widgets/textfield.dart';
 import 'package:fintrack/src/features/Transactions/presentation/provider/current_page_provider.dart';
-import 'package:fintrack/src/features/Transactions/presentation/widgets/category_section.dart';
+import 'package:fintrack/src/features/Transactions/presentation/widgets/tabs/expense_tab.dart';
+import 'package:fintrack/src/features/Transactions/presentation/widgets/tabs/income_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -49,6 +52,26 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: true,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButton: Container(
+        padding: EdgeInsets.only(bottom: context.width * 0.03),
+        height: 60,
+        color: Colors.transparent,
+        child: Column(
+          children: [
+            Icon(
+              PhosphorIcons.checkSquare,
+              color: Theme.of(context).primaryColor,
+            ),
+            const Text(
+              'Save',
+              style: TextStyle(fontSize: 8),
+            )
+          ],
+        ),
+      ).onTap(() {
+        log('saved');
+      }),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -163,7 +186,14 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
                           textEditingController: _textEditingController,
                           paymentIndex: paymentIndex,
                         ),
-                        Container(),
+                        IncomeTab(
+                          categoryName: categoryName,
+                          categoryIndex: category,
+                          theme: theme,
+                          ref: ref,
+                          themeModeCheck: themeModeCheck,
+                          paymentIndex: paymentIndex,
+                        )
                       ],
                     ),
                   ],
@@ -173,190 +203,6 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class ExpenseTap extends StatelessWidget {
-  const ExpenseTap({
-    Key? key,
-    required this.categoryName,
-    required this.category,
-    required this.theme,
-    required this.ref,
-    required this.themeModeCheck,
-    required TextEditingController textEditingController,
-    required this.paymentIndex,
-  })  : _textEditingController = textEditingController,
-        super(key: key);
-
-  final String categoryName;
-  final int category;
-  final ThemeMode theme;
-  final WidgetRef ref;
-  final bool themeModeCheck;
-  final TextEditingController _textEditingController;
-  final int paymentIndex;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 30),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0),
-          child: TextInput(
-            hintText: 'Name of $categoryName expense',
-            style: Theme.of(context).textTheme.subtitle2?.copyWith(
-                  fontSize: 15,
-                ),
-            filled: true,
-            border: OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(40),
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 20,
-            horizontal: 25,
-          ),
-          child: Text(
-            'Category',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                ),
-          ),
-        ),
-        CategoriesSection(
-          category: category,
-          theme: theme,
-          ref: ref,
-        ),
-        const SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0),
-          child: Row(
-            children: [
-              Container(
-                height: 45,
-                width: 115,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Theme.of(context).primaryColor),
-                child: Center(
-                  child: Text(
-                    'Amount',
-                    style: TextStyle(
-                      color: themeModeCheck ? null : Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 15),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: TextInput(
-                    // key:
-                    keyboardType: TextInputType.number,
-
-                    filled: false,
-                    hintText: '1000',
-
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: themeModeCheck ? Colors.white38 : Colors.black38,
-                      ),
-                      borderRadius: BorderRadius.circular(
-                        10,
-                      ),
-                    ),
-                    constraints: const BoxConstraints(
-                      maxHeight: 60,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                        10,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: Column(
-            children: [
-              TextInput(
-                style: Theme.of(context).textTheme.subtitle2?.copyWith(
-                      fontSize: 15,
-                    ),
-                hintText: 'Description',
-                filled: false,
-                suffixIcon: CircleAvatar(
-                  backgroundColor:
-                      Theme.of(context).primaryColor.withOpacity(0.1),
-                  child: IconButton(
-                    onPressed: (() {}),
-                    icon: Icon(
-                      PhosphorIcons.camera,
-                      size: 20,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                ),
-                border: const OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                ),
-              ),
-              Container(
-                height: 1,
-                width: double.infinity,
-                color: themeModeCheck ? Colors.white38 : Colors.black38,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: context.width / 1.49),
-                child: const Text(
-                  'Add Bill image',
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontSize: 8,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Payment Mode ',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                        ),
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: context.width * 0.12),
-                    child: CategoryWidgets(
-                      category: paymentIndex,
-                      theme: theme,
-                      ref: ref,
-                    ),
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }

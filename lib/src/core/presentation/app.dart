@@ -74,7 +74,7 @@ class _MyAppState extends ConsumerState<AppActivity> {
       bottomNavigationBar: GlassMorphicNavBar(
         theme: theme,
         currentIndex: _currentIndex,
-        unchanged: (value) => setState(
+        onChanged: (value) => setState(
           () {
             _currentIndex = value;
           },
