@@ -7,7 +7,7 @@ import 'package:fintrack/src/features/Transactions/presentation/provider/current
 import 'package:fintrack/src/features/Transactions/presentation/widgets/tabs/expense_tab.dart';
 import 'package:fintrack/src/features/Transactions/presentation/widgets/tabs/income_tab.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import 'package:fintrack/src/core/presentation/provider/themechanges.dart';
@@ -20,7 +20,7 @@ enum TransactionType {
   income,
 }
 
-class AddTransactionsScreen extends ConsumerStatefulWidget {
+class AddTransactionsScreen extends StatefulHookConsumerWidget {
   const AddTransactionsScreen({super.key});
 
   @override
@@ -53,25 +53,28 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
       extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: Container(
-        padding: EdgeInsets.only(bottom: context.width * 0.03),
-        height: 60,
-        color: Colors.transparent,
-        child: Column(
-          children: [
-            Icon(
-              PhosphorIcons.checkSquare,
-              color: Theme.of(context).primaryColor,
-            ),
-            const Text(
-              'Save',
-              style: TextStyle(fontSize: 8),
-            )
-          ],
-        ),
-      ).onTap(() {
-        log('saved');
-      }),
+      floatingActionButton: Visibility(
+        visible: MediaQuery.of(context).viewInsets.bottom == 0.0,
+        child: Container(
+          // padding: EdgeInsets.only(bottom: context.width * 0.02),
+          height: 60,
+          color: Colors.transparent,
+          child: Column(
+            children: [
+              Icon(
+                PhosphorIcons.checkSquare,
+                color: Theme.of(context).primaryColor,
+              ),
+              const Text(
+                'Save',
+                style: TextStyle(fontSize: 8),
+              )
+            ],
+          ),
+        ).onTap(() {
+          log('saved');
+        }),
+      ),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(

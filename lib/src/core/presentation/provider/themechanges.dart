@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ThemeChanges extends StateNotifier<ThemeMode> {
   ThemeChanges() : super(ThemeMode.dark);
 
-  void changeMode(bool isDark) async {
+  void changeMode(bool isDark) {
     state = isDark ? ThemeMode.dark : ThemeMode.light;
   }
 

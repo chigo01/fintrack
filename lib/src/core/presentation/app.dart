@@ -4,6 +4,7 @@ import 'package:fintrack/src/core/presentation/widgets/fab-button.dart';
 import 'package:fintrack/src/core/presentation/widgets/nav-bar.dart';
 import 'package:fintrack/src/core/presentation/widgets/pop_menu.dart';
 import 'package:fintrack/src/features/Profile/profile.dart';
+import 'package:fintrack/src/features/Transactions/home_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,7 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../features/Transactions/theme.dart';
 
 List<Widget> pages = [
-  const Profile(),
+  const HomeScreen(),
   const LightMode(),
   const Profile(),
   const LightMode()
@@ -39,6 +40,8 @@ class _MyAppState extends ConsumerState<AppActivity> {
         theme: theme,
       ),
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         title: Text(
           'Hi, Favour',
           style: Theme.of(context).textTheme.displayMedium?.copyWith(
