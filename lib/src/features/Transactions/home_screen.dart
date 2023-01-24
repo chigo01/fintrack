@@ -140,26 +140,25 @@ class _TabBodyState extends ConsumerState<TabBody> {
           decoration: BoxDecoration(
             // color: Theme.of(context).scaffoldBackgroundColor,
             color: themeModeChecker
-                ? Theme.of(context).primaryColor.withOpacity(0.2)
+                ? Theme.of(context).primaryColor.withOpacity(0.1)
                 : Colors.white,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
                 color: themeModeChecker
-                    ? Colors.transparent
+                    ? Theme.of(context).primaryColor.withOpacity(0.2)
                     : Colors.grey.withOpacity(0.2),
-                spreadRadius: 2,
-                blurRadius: 30,
-                offset: const Offset(3, 6),
+                spreadRadius: themeModeChecker ? 0.2 : 5,
+                blurRadius: themeModeChecker ? 7 : 30,
+                offset: const Offset(0, 2),
               ),
-              BoxShadow(
-                color: themeModeChecker
-                    ? Colors.transparent
-                    : Colors.grey.withOpacity(0.2),
-                spreadRadius: 2,
-                blurRadius: 30,
-                offset: const Offset(3, 6),
-              ),
+              // BoxShadow(
+              //   color: themeModeChecker
+              //       ? Theme.of(context).primaryColor.withOpacity(0.2)
+              //       : Colors.grey.withOpacity(0.2),
+              //   spreadRadius: 1,
+              //   blurRadius: 30,
+              //   offset: const Offset(3, 2),
             ],
           ),
           child:
