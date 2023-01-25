@@ -4,7 +4,7 @@ import 'package:fintrack/src/core/presentation/widgets/fab-button.dart';
 import 'package:fintrack/src/core/presentation/widgets/nav-bar.dart';
 import 'package:fintrack/src/core/presentation/widgets/pop_menu.dart';
 import 'package:fintrack/src/features/Profile/profile.dart';
-import 'package:fintrack/src/features/Transactions/home_screen.dart';
+import 'package:fintrack/src/features/Transactions/presentation/home_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -57,7 +57,7 @@ class _MyAppState extends ConsumerState<AppActivity> {
         ],
       ),
       body: PageTransitionSwitcher(
-          duration: const Duration(milliseconds: 1000),
+          duration: const Duration(milliseconds: 500),
           transitionBuilder: (widget, animation, anim2) {
             animation = CurvedAnimation(
               parent: animation,
