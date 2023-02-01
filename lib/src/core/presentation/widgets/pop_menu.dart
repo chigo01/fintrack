@@ -53,7 +53,7 @@ class _PopMenuWidgetState extends State<PopMenuWidget> {
       constraints: const BoxConstraints(maxHeight: 245, maxWidth: 190),
       color: Theme.of(context)
           .primaryColor
-          .withOpacity(widget.theme == ThemeMode.dark ? 0.1 : 0.3),
+          .withOpacity(widget.theme == ThemeMode.dark ? 0.1 : .4),
       tooltip: "Profile Menu",
       position: PopupMenuPosition.under,
       shape: RoundedRectangleBorder(

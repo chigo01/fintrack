@@ -18,17 +18,20 @@ class ExpenseTap extends StatelessWidget {
     required this.theme,
     required this.ref,
     required this.themeModeCheck,
-    required TextEditingController textEditingController,
     required this.paymentIndex,
-  })  : _textEditingController = textEditingController,
-        super(key: key);
+    required this.nameTextEditingController,
+    required this.amountTextEditingController,
+    required this.descriptionTextEditingController,
+  }) : super(key: key);
 
   final String categoryName;
   final int category;
   final ThemeMode theme;
   final WidgetRef ref;
   final bool themeModeCheck;
-  final TextEditingController _textEditingController;
+  final TextEditingController nameTextEditingController;
+  final TextEditingController amountTextEditingController;
+  final TextEditingController? descriptionTextEditingController;
   final int paymentIndex;
 
   @override
@@ -50,6 +53,7 @@ class ExpenseTap extends StatelessWidget {
               borderSide: BorderSide.none,
               borderRadius: BorderRadius.circular(15),
             ),
+            controller: nameTextEditingController,
           ),
         ),
         Padding(
@@ -97,15 +101,13 @@ class ExpenseTap extends StatelessWidget {
                   child: Column(
                     children: [
                       TextInput(
-                        // key:
+                        controller: amountTextEditingController,
                         keyboardType: TextInputType.number,
-
                         filled: false,
                         prefixStyle:
                             const TextStyle(fontSize: 18, color: Colors.grey),
                         hintText: '1000',
                         prefixText: currencySymbol,
-
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: themeModeCheck
@@ -201,6 +203,7 @@ class ExpenseTap extends StatelessWidget {
                 border: const OutlineInputBorder(
                   borderSide: BorderSide.none,
                 ),
+                controller: descriptionTextEditingController,
               ),
               Container(
                 height: 1,

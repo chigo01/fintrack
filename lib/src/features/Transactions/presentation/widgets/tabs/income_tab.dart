@@ -18,6 +18,9 @@ class IncomeTab extends StatelessWidget {
     required this.ref,
     required this.themeModeCheck,
     required this.paymentIndex,
+    required this.nameTextEditingController,
+    required this.amountTextEditingController,
+    required this.descriptionTextEditingController,
   });
 
   final String categoryName;
@@ -26,6 +29,9 @@ class IncomeTab extends StatelessWidget {
   final WidgetRef ref;
   final bool themeModeCheck;
   final int paymentIndex;
+  final TextEditingController nameTextEditingController;
+  final TextEditingController amountTextEditingController;
+  final TextEditingController? descriptionTextEditingController;
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +42,9 @@ class IncomeTab extends StatelessWidget {
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30.0),
         child: TextInput(
+          controller: nameTextEditingController,
           hintText: 'Name of $incomeCategoryName Income',
-          style: Theme.of(context).textTheme.subtitle2?.copyWith(
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
                 fontSize: 15,
               ),
           filled: true,
@@ -97,15 +104,13 @@ class IncomeTab extends StatelessWidget {
                 child: Column(
                   children: [
                     TextInput(
-                      // key:
+                      controller: amountTextEditingController,
                       keyboardType: TextInputType.number,
-
                       filled: false,
                       prefixStyle:
                           const TextStyle(fontSize: 18, color: Colors.grey),
                       hintText: '1000',
                       prefixText: currencySymbol,
-
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           color:
@@ -178,7 +183,8 @@ class IncomeTab extends StatelessWidget {
         child: Column(
           children: [
             TextInput(
-              style: Theme.of(context).textTheme.subtitle2?.copyWith(
+              controller: descriptionTextEditingController,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontSize: 15,
                   ),
               hintText: 'Description',

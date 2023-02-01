@@ -3,10 +3,13 @@
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:fintrack/src/core/domain/models/entities/transaction_collection.dart';
+import 'package:fintrack/src/features/Transactions/data/provider.dart';
 import 'package:fintrack/src/features/Transactions/presentation/provider/current_page_provider.dart';
 import 'package:fintrack/src/features/Transactions/presentation/widgets/tabs/expense_tab.dart';
 import 'package:fintrack/src/features/Transactions/presentation/widgets/tabs/income_tab.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -32,7 +35,6 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
   DateTime date = DateTime.now();
   DateTimeFormatter format = DateTimeFormatter();
   final ScrollController _scrollController = ScrollController();
-  final TextEditingController _textEditingController = TextEditingController();
 
   @override
   void initState() {
@@ -48,6 +50,9 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
     final payment = ref.watch(paymentName);
     final themeModeCheck = theme == ThemeMode.dark;
     final currentTransactionType = ref.watch(transactionType);
+    final nameController = useTextEditingController();
+    final amountController = useTextEditingController();
+    final descriptionController = useTextEditingController();
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -55,27 +60,48 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: Visibility(
         visible: MediaQuery.of(context).viewInsets.bottom == 0.0,
-        child: Container(
-          // padding: EdgeInsets.only(bottom: context.width * 0.02),
-          height: 60,
-          color: Colors.transparent,
-          child: Column(
-            children: [
-              Icon(
-                PhosphorIcons.checkSquare,
-                color: Theme.of(context).primaryColor,
+        child: Consumer(
+          builder: (BuildContext context, WidgetRef ref, Widget? child) {
+            //  final addTransaction =  ref.watch(transactionServiceRepositoryProvider);
+
+            return Container(
+              // padding: EdgeInsets.only(bottom: context.width * 0.02),
+              height: 60,
+              color: Colors.transparent,
+              child: Column(
+                children: [
+                  Icon(
+                    PhosphorIcons.checkSquare,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  const Text(
+                    'Save',
+                    style: TextStyle(fontSize: 8),
+                  )
+                ],
               ),
-              const Text(
-                'Save',
-                style: TextStyle(fontSize: 8),
-              )
-            ],
-          ),
-        ).onTap(() {
-          log('saved');
-        }),
+            ).onTap(() {
+              final book = ref.read(addTransaction(Transaction(
+                name: nameController.text,
+                amount: double.parse(amountController.text),
+                date: date,
+                category: categoryName,
+                transactionType: currentTransactionType.name,
+                description: descriptionController.text,
+                paymentType: currentTransactionType == TransactionType.expense
+                    ? payment
+                    : null,
+              )));
+
+              context.maybePop();
+
+              log('saved');
+            });
+          },
+        ),
       ),
       body: CustomScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         slivers: [
           SliverAppBar(
             title: Text(
@@ -186,8 +212,11 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
                           theme: theme,
                           ref: ref,
                           themeModeCheck: themeModeCheck,
-                          textEditingController: _textEditingController,
                           paymentIndex: paymentIndex,
+                          nameTextEditingController: nameController,
+                          amountTextEditingController: amountController,
+                          descriptionTextEditingController:
+                              descriptionController,
                         ),
                         IncomeTab(
                           categoryName: categoryName,
@@ -196,7 +225,11 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
                           ref: ref,
                           themeModeCheck: themeModeCheck,
                           paymentIndex: paymentIndex,
-                        )
+                          nameTextEditingController: nameController,
+                          amountTextEditingController: amountController,
+                          descriptionTextEditingController:
+                              descriptionController,
+                        ),
                       ],
                     ),
                   ],

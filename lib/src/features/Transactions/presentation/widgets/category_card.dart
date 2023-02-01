@@ -94,7 +94,7 @@ class CategoryCard extends StatelessWidget {
                 Text(
                   elements.title,
                   maxLines: 1,
-                  style: Theme.of(context).textTheme.subtitle2?.copyWith(
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontSize: boolIndex && context.height < 700 ? 6.7 : 8,
                       ),
                 ),

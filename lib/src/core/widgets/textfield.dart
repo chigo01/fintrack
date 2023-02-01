@@ -7,6 +7,7 @@ class TextInput extends StatelessWidget {
     this.hintStyle,
     required this.filled,
     required this.border,
+   required this.controller,
     this.suffixIcon,
     this.keyboardType,
     this.focusedBorder,
@@ -27,10 +28,12 @@ class TextInput extends StatelessWidget {
   final TextStyle? style;
   final String? prefixText;
   final TextStyle? prefixStyle;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       style: style,
       keyboardType: keyboardType,
       decoration: InputDecoration(

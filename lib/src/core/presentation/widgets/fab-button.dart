@@ -1,7 +1,7 @@
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:fintrack/src/core/route/route_navigations.dart';
 import 'package:fintrack/src/core/theme/app_color.dart';
-import 'package:fintrack/src/features/Transactions/presentation/transaction_entry.dart';
+import 'package:fintrack/src/features/Transactions/presentation/views/transaction_entry.dart';
 import 'package:fintrack/src/features/Transactions/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
