@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:collection/collection.dart';
 
 class HomeScreen extends StatefulHookConsumerWidget {
   const HomeScreen({super.key});
@@ -154,6 +155,7 @@ class _TabBodyState extends ConsumerState<TabBody> {
     final currency = ref.watch(currencyProvider);
     final expense = ref.watch(totalTransactions('expense'));
     final income = ref.watch(totalTransactions('income'));
+    final transactionsData = ref.watch(getTransactions(widget.transType));
 
     // final transanctionData = ref.watch(transactionProvider);
 
@@ -226,9 +228,11 @@ class _TabBodyState extends ConsumerState<TabBody> {
                             ),
                           ),
                           Container(
-                            width: (expense.value ?? 1) /
-                                (income.value ?? 1) *
-                                context.getWidth(),
+                            width: transactionsData.value?.isEmpty ?? true
+                                ? 3
+                                : ((expense.value ?? 0.0) /
+                                    (income.value ?? 0.0) *
+                                    context.getWidth()),
                             height: 14,
                             decoration: BoxDecoration(
                               color: Theme.of(context).primaryColor,
@@ -315,96 +319,96 @@ class _TabBodyState extends ConsumerState<TabBody> {
               height: context.getHeight() * 0.17,
               child: Consumer(
                 builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                  final transactionsData =
-                      ref.watch(getTransactions(widget.transType));
-
                   if (transactionsData.value != null &&
                       transactionsData.value!.isNotEmpty) {
                     return AsyncValueWidgets(
                         value: transactionsData,
                         data: (data) {
                           return Padding(
-                            padding: const EdgeInsets.only(left: 20.0),
-                            child: ListView.builder(
-                                padding: EdgeInsets.zero,
-                                physics: const BouncingScrollPhysics(),
-                                itemCount: data.length,
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  final categoryIcon = widget.categories
-                                      .singleWhere(
+                              padding: const EdgeInsets.only(left: 20.0),
+                              child: ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  physics: const BouncingScrollPhysics(),
+                                  itemCount: data.length,
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) {
+                                    final categoryIcon = widget.categories
+                                        .singleWhereOrNull(
                                           (element) =>
                                               element.title ==
                                               data[index].category,
-                                          orElse: () => widget.categories[0])
-                                      .icon;
+                                        )
+                                        ?.icon;
 
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 8.0,
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        const SizedBox(width: 10),
-                                        Expanded(
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                child: CircleAvatar(
-                                                  radius: 16,
-                                                  backgroundColor:
-                                                      Theme.of(context)
-                                                          .primaryColor,
-                                                  child: Icon(categoryIcon,
-                                                      size: 20,
-                                                      color: Colors.white),
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const SizedBox(width: 10),
+                                          Expanded(
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: CircleAvatar(
+                                                    radius: 16,
+                                                    backgroundColor:
+                                                        Theme.of(context)
+                                                            .primaryColor,
+                                                    child: Icon(categoryIcon,
+                                                        size: 20,
+                                                        color: Colors.white),
+                                                  ),
                                                 ),
-                                              ),
-                                              const SizedBox(width: 3),
-                                              Expanded(
-                                                child: Text(
-                                                  data[index].name.capitalized,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall
-                                                      ?.copyWith(
-                                                        fontWeight:
-                                                            FontWeight.w200,
-                                                        fontSize: 10,
-                                                      ),
+                                                const SizedBox(width: 3),
+                                                Expanded(
+                                                  child: Text(
+                                                    data[index]
+                                                        .name
+                                                        .capitalized,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodySmall
+                                                        ?.copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w200,
+                                                          fontSize: 10,
+                                                        ),
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(width: 70),
-                                        const Expanded(child: Text('98%')),
-                                        const SizedBox(width: 35),
-                                        Expanded(
-                                          child: Text(
-                                            Money.format(
-                                              value: data[index].amount,
-                                              symbol: currency,
+                                              ],
                                             ),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.copyWith(
-                                                  fontSize: 12,
-                                                  color: widget.transType ==
-                                                          'Expense'
-                                                      ? const Color(0xffFF4439)
-                                                      : const Color(0xff4CAF50),
-                                                ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }),
-                          );
+                                          const SizedBox(width: 70),
+                                          const Expanded(child: Text('98%')),
+                                          const SizedBox(width: 35),
+                                          Expanded(
+                                            child: Text(
+                                              Money.format(
+                                                value: data[index].amount,
+                                                symbol: currency,
+                                              ),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium
+                                                  ?.copyWith(
+                                                    fontSize: 12,
+                                                    color: widget.transType ==
+                                                            'Expense'
+                                                        ? const Color(
+                                                            0xffFF4439)
+                                                        : const Color(
+                                                            0xff4CAF50),
+                                                  ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }));
                         });
                   } else {
                     return const Center(

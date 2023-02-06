@@ -75,8 +75,12 @@ class IsarServiceRepository implements TransactionRepository {
         .amountProperty()
         .build();
     await for (final transaction in query.watch(fireImmediately: true)) {
-      final result = transaction.reduce((value, element) => value + element);
-      yield result;
+      if (transaction.isEmpty) {
+        yield 0.0;
+      } else {
+        final result = transaction.reduce((value, element) => value + element);
+        yield result;
+      }
     }
   }
 }
