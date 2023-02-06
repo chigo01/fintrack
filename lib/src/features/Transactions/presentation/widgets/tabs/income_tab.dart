@@ -70,11 +70,11 @@ class IncomeTab extends StatelessWidget {
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: CategoryWidgets(
-          category: paymentIndex,
+          categoryIndex: paymentIndex,
           theme: theme,
           ref: ref,
-          categories: incomeCategory,
-          stateNotifier: incomeName,
+          category: incomeCategory,
+          categoryStateNotifier: incomeName,
         ),
       ),
       const SizedBox(height: 10),
@@ -82,22 +82,27 @@ class IncomeTab extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 30.0),
         child: Row(
           children: [
-            Container(
-              height: 45,
-              width: 115,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Theme.of(context).primaryColor),
-              child: Center(
-                child: Text(
-                  'Amount',
-                  style: TextStyle(
-                    color: themeModeCheck ? null : Colors.white,
+            Column(
+              children: [
+                Container(
+                  height: 50,
+                  width: 115,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Theme.of(context).primaryColor),
+                  child: Center(
+                    child: Text(
+                      'Amount',
+                      style: TextStyle(
+                        color: themeModeCheck ? null : Colors.white,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                const SizedBox(height: 40)
+              ],
             ),
-            const SizedBox(width: 15),
+            const SizedBox(width: 10),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(15.0),

@@ -42,13 +42,12 @@ class _MyAppState extends ConsumerState<AppActivity> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(
-          'Hi, Favour',
-          style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
-        ),
+        title: Text('Hi, Favour!',
+            style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                  fontSize: 20,
+                  fontWeight: FontWeight.normal,
+                  color: Theme.of(context).primaryColor,
+                )),
         actions: [
           Padding(
             padding: const EdgeInsets.all(12.0),

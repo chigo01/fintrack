@@ -1,5 +1,6 @@
 import 'package:fintrack/src/core/domain/models/entities/transaction_collection.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 
 import 'repository/isar_service.dart';
 
@@ -9,8 +10,14 @@ final addTransaction = FutureProvider.autoDispose
   return await isarService.addTransaction(transaction);
 });
 
-final getTransactions =
-    StreamProvider.autoDispose<List<Transaction>>((ref) async* {
+final getTransactions = StreamProvider.autoDispose
+    .family<List<Transaction>, String>((ref, transactionType) async* {
   final isarService = IsarServiceRepository();
-  yield* isarService.getTransactions();
+  yield* isarService.getRecentTransactions(transactionType);
+});
+
+final totalTransactions = StreamProvider.autoDispose
+    .family<double, String>((ref, transactionType) async* {
+  final isarService = IsarServiceRepository();
+  yield* isarService.totalTransaction(transactionType);
 });

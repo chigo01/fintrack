@@ -69,18 +69,18 @@ class CategoriesSection extends StatelessWidget {
 class CategoryWidgets extends StatelessWidget {
   const CategoryWidgets({
     Key? key,
-    required this.category,
+    required this.categoryIndex,
     required this.theme,
     required this.ref,
-    required this.categories,
-    required this.stateNotifier,
+    required this.category,
+    required this.categoryStateNotifier,
   }) : super(key: key);
 
-  final int category;
+  final int categoryIndex;
   final ThemeMode theme;
   final WidgetRef ref;
-  final List<Category> categories;
-  final StateProvider<String> stateNotifier;
+  final List<Category> category;
+  final StateProvider<String> categoryStateNotifier;
 
   // final WidgetRef ref;
   @override
@@ -92,13 +92,13 @@ class CategoryWidgets extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
         shrinkWrap: true,
-        itemCount: categories.length,
+        itemCount: category.length,
         itemBuilder: ((context, index) {
-          Category elements = categories.elementAt(index);
-          bool boolIndex = category == index;
+          Category elements = category.elementAt(index);
+          bool boolIndex = categoryIndex == index;
           return CategoryCard(
             boolIndex: boolIndex,
-            category: category,
+            category: categoryIndex,
             context: context,
             elements: elements,
             index: index,
@@ -108,7 +108,7 @@ class CategoryWidgets extends StatelessWidget {
               ref.read(paymentCurrentIndex.notifier).state = index;
               ref
                   .read(
-                    stateNotifier.notifier,
+                    categoryStateNotifier.notifier,
                   )
                   .update(
                     (state) => state = elements.title,

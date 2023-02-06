@@ -19,10 +19,13 @@ class IsarServiceRepository implements TransactionRepository {
   }
 
   @override
-  Stream<List<Transaction>> getTransactions() async* {
+  Stream<List<Transaction>> getRecentTransactions(
+      String transactionType) async* {
     final isar = await db;
     final query = isar.transactions
         .where(sort: Sort.desc)
+        .filter()
+        .transactionTypeEqualTo(transactionType, caseSensitive: false)
         .sortByDateDesc()
         .limit(5)
         .build();
@@ -57,5 +60,23 @@ class IsarServiceRepository implements TransactionRepository {
   Future<void> updateTransaction(Transaction transaction) {
     // TODO: implement updateTransaction
     throw UnimplementedError();
+  }
+
+  @override
+  Stream<double> totalTransaction(String transactionType) async* {
+    final isar = await db;
+    final query = isar.transactions
+        .where()
+        .filter()
+        .transactionTypeEqualTo(
+          transactionType,
+          caseSensitive: false,
+        )
+        .amountProperty()
+        .build();
+    await for (final transaction in query.watch(fireImmediately: true)) {
+      final result = transaction.reduce((value, element) => value + element);
+      yield result;
+    }
   }
 }

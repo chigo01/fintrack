@@ -22,6 +22,7 @@ class ExpenseTap extends StatelessWidget {
     required this.nameTextEditingController,
     required this.amountTextEditingController,
     required this.descriptionTextEditingController,
+    this.onTap,
   }) : super(key: key);
 
   final String categoryName;
@@ -33,6 +34,7 @@ class ExpenseTap extends StatelessWidget {
   final TextEditingController amountTextEditingController;
   final TextEditingController? descriptionTextEditingController;
   final int paymentIndex;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,7 @@ class ExpenseTap extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: TextInput(
             hintText: 'Name of $categoryName expense',
-            style: Theme.of(context).textTheme.subtitle2?.copyWith(
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
                   fontSize: 15,
                 ),
             filled: true,
@@ -79,25 +81,30 @@ class ExpenseTap extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: Row(
             children: [
-              Container(
-                height: 45,
-                width: 115,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Theme.of(context).primaryColor),
-                child: Center(
-                  child: Text(
-                    'Amount',
-                    style: TextStyle(
-                      color: themeModeCheck ? null : Colors.white,
+              Column(
+                children: [
+                  Container(
+                    height: 50,
+                    width: 115,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Theme.of(context).primaryColor),
+                    child: Center(
+                      child: Text(
+                        'Amount',
+                        style: TextStyle(
+                          color: themeModeCheck ? null : Colors.white,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  const SizedBox(height: 40)
+                ],
               ),
-              const SizedBox(width: 15),
+              const SizedBox(width: 10),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(15.0),
+                  padding: const EdgeInsets.all(10),
                   child: Column(
                     children: [
                       TextInput(
@@ -183,7 +190,7 @@ class ExpenseTap extends StatelessWidget {
           child: Column(
             children: [
               TextInput(
-                style: Theme.of(context).textTheme.subtitle2?.copyWith(
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       fontSize: 15,
                     ),
                 hintText: 'Description',
@@ -192,7 +199,7 @@ class ExpenseTap extends StatelessWidget {
                   backgroundColor:
                       Theme.of(context).primaryColor.withOpacity(0.1),
                   child: IconButton(
-                    onPressed: (() {}),
+                    onPressed: onTap,
                     icon: Icon(
                       PhosphorIcons.camera,
                       size: 20,
@@ -235,11 +242,11 @@ class ExpenseTap extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(horizontal: context.width * 0.12),
                     child: CategoryWidgets(
-                      category: paymentIndex,
+                      categoryIndex: paymentIndex,
                       theme: theme,
                       ref: ref,
-                      categories: paymentCategory,
-                      stateNotifier: currentCategory,
+                      category: paymentCategory,
+                      categoryStateNotifier: paymentName,
                     ),
                   )
                 ],

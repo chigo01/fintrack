@@ -11,6 +11,8 @@ import 'package:fintrack/src/features/Transactions/presentation/widgets/tabs/inc
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import 'package:image_picker/image_picker.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import 'package:fintrack/src/core/presentation/provider/themechanges.dart';
@@ -22,6 +24,8 @@ enum TransactionType {
   expense,
   income,
 }
+
+final imagePath = StateProvider<String?>((ref) => null);
 
 class AddTransactionsScreen extends StatefulHookConsumerWidget {
   const AddTransactionsScreen({super.key});
@@ -53,6 +57,23 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
     final nameController = useTextEditingController();
     final amountController = useTextEditingController();
     final descriptionController = useTextEditingController();
+    final imageUrl = ref.watch(imagePath);
+    // String imagePath = '';
+    final ImagePicker picker = ImagePicker();
+
+    Future<void> getImage() async {
+      final pickedFile = await picker.pickImage(
+          source: ImageSource.gallery,
+          maxHeight: 80,
+          maxWidth: 100,
+          imageQuality: 200);
+
+      if (pickedFile != null) {
+        ref.read(imagePath.notifier).update(
+              (state) => state = pickedFile.path,
+            );
+      }
+    }
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -81,21 +102,28 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
                 ],
               ),
             ).onTap(() {
-              final book = ref.read(addTransaction(Transaction(
-                name: nameController.text,
-                amount: double.parse(amountController.text),
-                date: date,
-                category: categoryName,
-                transactionType: currentTransactionType.name,
-                description: descriptionController.text,
-                paymentType: currentTransactionType == TransactionType.expense
-                    ? payment
-                    : null,
-              )));
+              ref.read(
+                addTransaction(
+                  Transaction(
+                    name: nameController.text,
+                    amount: double.parse(amountController.text),
+                    date: date,
+                    category: categoryName,
+                    transactionType: currentTransactionType.name,
+                    description: descriptionController.text,
+                    imageUrl: imageUrl,
+                    paymentType:
+                        currentTransactionType == TransactionType.expense
+                            ? payment
+                            : null,
+                  ),
+                ),
+              );
 
               context.maybePop();
 
               log('saved');
+              log(imageUrl.toString());
             });
           },
         ),
@@ -217,6 +245,7 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
                           amountTextEditingController: amountController,
                           descriptionTextEditingController:
                               descriptionController,
+                          onTap: getImage,
                         ),
                         IncomeTab(
                           categoryName: categoryName,
