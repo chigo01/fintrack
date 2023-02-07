@@ -1,15 +1,20 @@
 import 'dart:io';
-
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fintrack/src/core/domain/models/category.dart';
 import 'package:fintrack/src/core/presentation/provider/themechanges.dart';
+import 'package:fintrack/src/core/presentation/widgets/pop_menu.dart';
+import 'package:fintrack/src/core/route/route_navigations.dart';
 import 'package:fintrack/src/core/utils/extension.dart';
 import 'package:fintrack/src/core/utils/money.dart';
 import 'package:fintrack/src/core/widgets/asyncvalue.dart';
+import 'package:fintrack/src/core/widgets/balance.dart';
 import 'package:fintrack/src/features/Transactions/data/provider.dart';
 import 'package:fintrack/src/features/Transactions/presentation/provider/currency.dart';
+import 'package:fintrack/src/features/analysis/presentation/views/analysis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:collection/collection.dart';
@@ -29,43 +34,62 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     ValueNotifier<int> currentIndex = useState(0);
     final expense = ref.watch(totalTransactions('expense')).value;
     final income = ref.watch(totalTransactions('income')).value;
+    final themeModeChecker = ref.read(themeProvider) == ThemeMode.dark;
+    final theme = ref.watch(themeProvider);
     return Scaffold(
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: Stack(
-          children: [
-            Container(
-              height: 350,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withOpacity(0.2),
-              ),
-              child: Container(
-                padding: EdgeInsets.only(top: context.height * 0.1),
+      body: SingleChildScrollView(
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Stack(
+            children: [
+              Container(
+                height: 350,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withOpacity(0.2),
+                ),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Column(
-                      children: [
-                        Text(
-                          'Balance',
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontSize: 10,
+                    const SizedBox(height: 4),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                              padding: const EdgeInsets.only(left: 20.0),
+                              child: AnimatedTextKit(
+                                animatedTexts: [
+                                  TypewriterAnimatedText(
+                                    'Welcome, Favour ',
+                                    speed: const Duration(milliseconds: 150),
+                                    cursor: '',
+                                    textStyle: GoogleFonts.itim(
+                                      fontSize: 17,
+                                      color:
+                                          themeModeChecker ? Colors.grey : null,
+                                    ),
                                   ),
-                        ),
-                        Text(
-                          Money.format(
-                            value: (income ?? 1) - (expense ?? 1),
-                            symbol: ref.watch(currencyProvider),
+                                ],
+                                isRepeatingAnimation: true,
+                                repeatForever: true,
+                                displayFullTextOnTap: true,
+                                stopPauseOnTap: false,
+                              )),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 12.0),
+                            child: PopMenuWidget(ref: ref, theme: theme),
                           ),
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontSize: 10,
-                                  ),
-                        )
-                      ],
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 10),
+                    BalanceWidget(
+                      income: income,
+                      expense: expense,
+                      ref: ref,
+                    ),
+                    const SizedBox(height: 5),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -92,42 +116,42 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ],
                 ),
               ),
-            ),
-            Positioned(
-              top: 150,
-              left: 0,
-              right: 0,
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(50),
-                    topRight: Radius.circular(50),
+              Positioned(
+                top: 150,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(50),
+                      topRight: Radius.circular(50),
+                    ),
+                  ),
+                  child: IndexedStack(
+                    index: currentIndex.value,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 14.0),
+                        child: TabBody(
+                          categories: categories,
+                          transType: 'Expense',
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 14.0),
+                        child: TabBody(
+                          categories: incomeCategory,
+                          transType: 'Income',
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                child: IndexedStack(
-                  index: currentIndex.value,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 14.0),
-                      child: TabBody(
-                        categories: categories,
-                        transType: 'Expense',
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 14.0),
-                      child: TabBody(
-                        categories: incomeCategory,
-                        transType: 'Income',
-                      ),
-                    ),
-                  ],
-                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -207,9 +231,10 @@ class _TabBodyState extends ConsumerState<TabBody> {
                                 .textTheme
                                 .bodyMedium
                                 ?.copyWith(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey,
+                                ),
                           )
                         ],
                       ),
@@ -255,31 +280,37 @@ class _TabBodyState extends ConsumerState<TabBody> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            AutoSizeText(
-                              Money.format(
-                                value: expense.value ?? 0.0,
-                                symbol: currency,
+                            Padding(
+                              padding: const EdgeInsets.only(left: 14.0),
+                              child: AutoSizeText(
+                                Money.format(
+                                  value: expense.value ?? 0.0,
+                                  symbol: currency,
+                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                      fontSize: 12,
+                                      color: const Color(0xffFF4439),
+                                    ),
                               ),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                    fontSize: 12,
-                                    color: const Color(0xffFF4439),
-                                  ),
                             ),
-                            AutoSizeText(
-                              Money.format(
-                                value: income.value ?? 0.0,
-                                symbol: currency,
+                            Padding(
+                              padding: const EdgeInsets.only(left: 14.0),
+                              child: AutoSizeText(
+                                Money.format(
+                                  value: income.value ?? 0.0,
+                                  symbol: currency,
+                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                      fontSize: 12,
+                                      color: const Color(0xff4CAF50),
+                                    ),
                               ),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                    fontSize: 12,
-                                    color: const Color(0xff4CAF50),
-                                  ),
                             )
                           ],
                         ),
@@ -304,7 +335,11 @@ class _TabBodyState extends ConsumerState<TabBody> {
                   message: 'See All',
                   child: IconButton(
                     padding: EdgeInsets.zero,
-                    onPressed: () {},
+                    onPressed: () {
+                      context.pushTransition(
+                        const AnalysisScreen(),
+                      );
+                    },
                     icon: Icon(
                       PhosphorIcons.arrowCircleRight,
                       size: 30,
@@ -319,6 +354,10 @@ class _TabBodyState extends ConsumerState<TabBody> {
               height: context.getHeight() * 0.17,
               child: Consumer(
                 builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                  final double totalAmount =
+                      ref.watch(totalTransactions(widget.transType)).value ??
+                          0.0;
+
                   if (transactionsData.value != null &&
                       transactionsData.value!.isNotEmpty) {
                     return AsyncValueWidgets(
@@ -352,23 +391,24 @@ class _TabBodyState extends ConsumerState<TabBody> {
                                           Expanded(
                                             child: Row(
                                               children: [
-                                                Expanded(
-                                                  child: CircleAvatar(
-                                                    radius: 16,
-                                                    backgroundColor:
-                                                        Theme.of(context)
-                                                            .primaryColor,
-                                                    child: Icon(categoryIcon,
-                                                        size: 20,
-                                                        color: Colors.white),
-                                                  ),
+                                                CircleAvatar(
+                                                  radius: 16,
+                                                  backgroundColor:
+                                                      Theme.of(context)
+                                                          .primaryColor,
+                                                  child: Icon(categoryIcon,
+                                                      size: 20,
+                                                      color: Colors.white),
                                                 ),
-                                                const SizedBox(width: 3),
+                                                const SizedBox(width: 2),
                                                 Expanded(
+                                                  flex: 2,
                                                   child: Text(
                                                     data[index]
-                                                        .name
+                                                        .category
                                                         .capitalized,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .bodySmall
@@ -383,7 +423,16 @@ class _TabBodyState extends ConsumerState<TabBody> {
                                             ),
                                           ),
                                           const SizedBox(width: 70),
-                                          const Expanded(child: Text('98%')),
+                                          Expanded(
+                                            child: Text(
+                                              Money.percentage(
+                                                amount: data[index].amount,
+                                                totalAmount: totalAmount,
+                                              ),
+                                              style:
+                                                  const TextStyle(fontSize: 12),
+                                            ),
+                                          ),
                                           const SizedBox(width: 35),
                                           Expanded(
                                             child: Text(
@@ -447,7 +496,9 @@ class _TabBodyState extends ConsumerState<TabBody> {
                             ),
                       ),
                     ),
-                  ).onTap(() {})
+                  ).onTap(() {
+                    debugPrint('hello');
+                  })
                 ],
               ),
             ),
@@ -465,87 +516,83 @@ class _TabBodyState extends ConsumerState<TabBody> {
 
                   if (transactionsData.value != null &&
                       transactionsData.value!.isNotEmpty) {
-                    return transactionsData.when(
-                      data: (data) {
-                        return ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          padding: EdgeInsets.zero,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: data.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: PhysicalModel(
-                                borderRadius: BorderRadius.circular(15),
-                                color: themeModeChecker
-                                    ? Theme.of(context)
-                                        .primaryColor
-                                        .withOpacity(0.1)
-                                    : Colors.white,
-                                elevation: themeModeChecker ? 5.4 : 10,
-                                child: SizedBox(
-                                  height: 130,
-                                  width: 150,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      // const SizedBox(height: 10),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Text(
-                                          '23 May 2023',
+                    return AsyncValueWidgets(
+                        value: transactionsData,
+                        data: (data) {
+                          return ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            padding: EdgeInsets.zero,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: data.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: PhysicalModel(
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: themeModeChecker
+                                      ? Theme.of(context)
+                                          .primaryColor
+                                          .withOpacity(0.1)
+                                      : Colors.white,
+                                  elevation: themeModeChecker ? 5.4 : 10,
+                                  child: SizedBox(
+                                    height: 130,
+                                    width: 150,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        // const SizedBox(height: 10),
+                                        Expanded(
+                                          flex: 1,
+                                          child: Text(
+                                            '23 May 2023',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge
+                                                ?.copyWith(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w200,
+                                                ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 4,
+                                          child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: data[index].imageUrl ==
+                                                      null
+                                                  ? Image.asset(
+                                                      'assets/images/shoe.png')
+                                                  : Image.file(
+                                                      File(
+                                                        data[index].imageUrl!,
+                                                      ),
+                                                      height: 50,
+                                                      width: 70,
+                                                      fit: BoxFit.fill,
+                                                    )),
+                                        ),
+                                        Text(
+                                          'Shoe',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .bodyLarge
-                                              ?.copyWith(
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w200,
-                                              ),
+                                              .labelSmall
+                                              ?.copyWith(fontSize: 15),
                                         ),
-                                      ),
-                                      Expanded(
-                                        flex: 4,
-                                        child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: data[index].imageUrl == null
-                                                ? Image.asset(
-                                                    'assets/images/shoe.png')
-                                                : Image.file(
-                                                    File(
-                                                      data[index].imageUrl!,
-                                                    ),
-                                                    height: 50,
-                                                    width: 70,
-                                                    fit: BoxFit.fill,
-                                                  )),
-                                      ),
-                                      Text(
-                                        'Shoe',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelSmall
-                                            ?.copyWith(fontSize: 15),
-                                      ),
-                                      const Text(
-                                        '\$786',
-                                        style: TextStyle(fontSize: 13),
-                                      ),
-                                    ],
+                                        const Text(
+                                          '\$786',
+                                          style: TextStyle(fontSize: 13),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      error: (Object error, StackTrace stackTrace) => Text(
-                        'error $error',
-                      ),
-                      loading: () => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
+                              );
+                            },
+                          );
+                        });
                   } else {
                     return const Center(
                       child: Text('No Transactions'),

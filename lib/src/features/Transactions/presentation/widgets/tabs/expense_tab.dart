@@ -6,7 +6,8 @@ import 'package:fintrack/src/features/Transactions/presentation/provider/currenc
 import 'package:fintrack/src/features/Transactions/presentation/provider/current_page_provider.dart';
 import 'package:fintrack/src/features/Transactions/presentation/widgets/category_section.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 

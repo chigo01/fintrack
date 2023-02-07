@@ -38,7 +38,7 @@ class AddTransactionsScreen extends StatefulHookConsumerWidget {
 class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
   DateTime date = DateTime.now();
   DateTimeFormatter format = DateTimeFormatter();
-  final ScrollController _scrollController = ScrollController();
+  // final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -51,6 +51,7 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
     final category = ref.watch(currentIndex);
     final categoryName = ref.watch(currentCategory);
     final paymentIndex = ref.watch(paymentCurrentIndex);
+    final incomeCategory = ref.watch(incomeName);
     final payment = ref.watch(paymentName);
     final themeModeCheck = theme == ThemeMode.dark;
     final currentTransactionType = ref.watch(transactionType);
@@ -66,7 +67,7 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
           source: ImageSource.gallery,
           maxHeight: 80,
           maxWidth: 100,
-          imageQuality: 200);
+          imageQuality: 100);
 
       if (pickedFile != null) {
         ref.read(imagePath.notifier).update(
@@ -83,7 +84,8 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
         visible: MediaQuery.of(context).viewInsets.bottom == 0.0,
         child: Consumer(
           builder: (BuildContext context, WidgetRef ref, Widget? child) {
-            //  final addTransaction =  ref.watch(transactionServiceRepositoryProvider);
+            bool currentTransaction =
+                currentTransactionType == TransactionType.expense;
 
             return Container(
               // padding: EdgeInsets.only(bottom: context.width * 0.02),
@@ -108,14 +110,12 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
                     name: nameController.text,
                     amount: double.parse(amountController.text),
                     date: date,
-                    category: categoryName,
+                    category:
+                        currentTransaction ? categoryName : incomeCategory,
                     transactionType: currentTransactionType.name,
                     description: descriptionController.text,
                     imageUrl: imageUrl,
-                    paymentType:
-                        currentTransactionType == TransactionType.expense
-                            ? payment
-                            : null,
+                    paymentType: currentTransaction ? payment : null,
                   ),
                 ),
               );

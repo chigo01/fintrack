@@ -7,4 +7,9 @@ class Money {
     return NumberFormat.currency(symbol: symbol, decimalDigits: 2)
         .format(value);
   }
+
+  static String percentage(
+      {required double amount, required double totalAmount}) {
+    return '${(amount / totalAmount * 100).toStringAsFixed(1)}%';
+  }
 }

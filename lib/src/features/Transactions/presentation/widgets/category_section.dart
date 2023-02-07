@@ -1,12 +1,10 @@
 import 'dart:developer';
-
 import 'package:fintrack/src/core/domain/models/category.dart';
 import 'package:fintrack/src/core/utils/extension.dart';
 import 'package:fintrack/src/features/Transactions/presentation/provider/current_page_provider.dart';
-import 'package:fintrack/src/features/Transactions/presentation/views/transaction_entry.dart';
 import 'package:fintrack/src/features/Transactions/presentation/widgets/category_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class CategoriesSection extends StatelessWidget {
   const CategoriesSection({
