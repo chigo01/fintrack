@@ -2,6 +2,8 @@ import 'package:fintrack/src/core/domain/models/entities/transaction_collection.
 import 'package:fintrack/src/features/Transactions/data/repository/transaction_repository.dart';
 import 'package:isar/isar.dart';
 
+// DateTime date = DateTime.now();
+
 class IsarServiceRepository implements TransactionRepository {
   late Future<Isar> db;
 
@@ -83,4 +85,71 @@ class IsarServiceRepository implements TransactionRepository {
       }
     }
   }
+
+  @override
+  Stream<double> totalTransactionByDay(DateTime date) async* {
+    final isar = await db;
+    final query = isar.transactions
+        .filter()
+        .dateEqualTo(DateTime(date.year, date.month, date.day))
+        .dateEqualTo(DateTime.now())
+        .and()
+        .transactionTypeEqualTo('expense', caseSensitive: false)
+        .amountProperty()
+        .build();
+
+    await for (final transaction in query.watch(fireImmediately: true)) {
+      if (transaction.isEmpty) {
+        yield 0.0;
+      } else {
+        final result = transaction.reduce((value, element) => value + element);
+        yield result;
+      }
+    }
+  }
+
+  @override
+  Stream<List<Transaction>> getAllTransactions(String transactionType) async* {
+    final isar = await db;
+    final query = isar.transactions
+        .where(sort: Sort.desc)
+        .filter()
+        .transactionTypeEqualTo(transactionType, caseSensitive: false)
+        .sortByDateDesc()
+        .build();
+    await for (final transaction in query.watch(fireImmediately: true)) {
+      if (transaction.isNotEmpty) {
+        yield transaction;
+      }
+    }
+  }
+}
+
+DateTime getDate(DateTime date) {
+  DateTime instance = DateTime.now();
+  Duration diff = instance.difference(date);
+
+  switch (diff.inDays) {
+    case 1:
+      return DateTime(instance.year, date.month, date.day);
+
+    case 2:
+      return DateTime(instance.year, date.month, date.day);
+
+    case 3:
+      return DateTime(instance.year, date.month, date.day);
+
+    case 4:
+      return DateTime(instance.year, date.month, date.day);
+
+    case 5:
+      return DateTime(instance.year, date.month, date.day);
+
+    case 6:
+      return DateTime(instance.year, date.month, date.day);
+
+    case 7:
+      return DateTime(instance.year, date.month, date.day);
+  }
+  return DateTime(instance.year, date.month, date.day);
 }

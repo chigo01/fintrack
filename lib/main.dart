@@ -26,10 +26,10 @@ void main() {
 
   runApp(
     const ProviderScope(
-      //     child: DevicePreview(
-      //   builder: (_) => const MyApp(),
+      // child: DevicePreview(
       //   enabled: !kReleaseMode,
-      // )
+      //   builder: (context) => const MyApp(), // Wrap your app
+      // ),
       child: MyApp(),
     ),
   );
