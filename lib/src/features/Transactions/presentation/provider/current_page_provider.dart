@@ -1,5 +1,5 @@
 import 'package:fintrack/src/features/Transactions/presentation/views/transaction_entry.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 StateProvider<int> currentIndex = StateProvider((ref) => 1);
 final paymentName = StateProvider((ref) => 'Cash');

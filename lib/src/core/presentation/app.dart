@@ -2,11 +2,9 @@ import 'package:animations/animations.dart';
 import 'package:fintrack/src/core/presentation/provider/themechanges.dart';
 import 'package:fintrack/src/core/presentation/widgets/fab-button.dart';
 import 'package:fintrack/src/core/presentation/widgets/nav-bar.dart';
-import 'package:fintrack/src/core/presentation/widgets/pop_menu.dart';
 import 'package:fintrack/src/features/Profile/profile.dart';
 import 'package:fintrack/src/features/Transactions/presentation/views/home_screen.dart';
 import 'package:fintrack/src/features/analysis/presentation/views/analysis.dart';
-
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -35,9 +33,11 @@ class _MyAppState extends ConsumerState<AppActivity> {
       extendBodyBehindAppBar: true,
       extendBody: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FabButton(
-        theme: theme,
-      ),
+      floatingActionButton: Visibility(
+          visible: MediaQuery.of(context).viewInsets.bottom == 0.0,
+          child: FabButton(
+            theme: theme,
+          )),
       // appBar: AppBar(
       //   backgroundColor: Colors.transparent,
       //   elevation: 0,

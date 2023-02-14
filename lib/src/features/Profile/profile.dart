@@ -2,7 +2,7 @@ import 'package:fintrack/src/core/utils/money.dart';
 import 'package:fintrack/src/core/widgets/glass_container.dart';
 import 'package:fintrack/src/features/Transactions/presentation/provider/currency.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/presentation/provider/themechanges.dart';

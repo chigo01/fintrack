@@ -1,0 +1,185 @@
+import 'package:fintrack/src/core/utils/money.dart';
+import 'package:fintrack/src/features/Transactions/data/provider.dart';
+import 'package:fintrack/src/features/analysis/presentation/widgets/lineChart.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+class TodayTab extends HookConsumerWidget {
+  const TodayTab({super.key});
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final transaction = ref.watch(getAllTransactions('expense')).valueOrNull;
+
+    TextStyle textStyle = const TextStyle(
+      fontSize: 9,
+    );
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 40),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: LineCharts(
+                  sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (value, _) {
+                        switch (value.toInt()) {
+                          case 2:
+                            return Text(
+                              '1hr',
+                              style: textStyle,
+                            );
+                          case 4:
+                            return Text(
+                              '2hr',
+                              style: textStyle,
+                            );
+                          case 6:
+                            return Text(
+                              '3hr',
+                              style: textStyle,
+                            );
+                          case 8:
+                            return Text(
+                              '4hr',
+                              style: textStyle,
+                            );
+                          case 10:
+                            return Text(
+                              '5hr',
+                              style: textStyle,
+                            );
+                          case 12:
+                            return Text(
+                              '6hr',
+                              style: textStyle,
+                            );
+                          case 14:
+                            return Text(
+                              '7hr',
+                              style: textStyle,
+                            );
+                          case 16:
+                            return Text(
+                              '8hr',
+                              style: textStyle,
+                            );
+                          case 18:
+                            return Text(
+                              '9hr',
+                              style: textStyle,
+                            );
+                          case 20:
+                            return Text(
+                              '10hr',
+                              style: textStyle,
+                            );
+                          case 22:
+                            return Text(
+                              '11hr',
+                              style: textStyle,
+                            );
+                          case 24:
+                            return Text(
+                              '12hr',
+                              style: textStyle,
+                            );
+                          case 26:
+                            return Text(
+                              '13hr',
+                              style: textStyle,
+                            );
+                          case 28:
+                            return Text(
+                              '14hr',
+                              style: textStyle,
+                            );
+                          case 30:
+                            return Text(
+                              '15hr',
+                              style: textStyle,
+                            );
+                          case 32:
+                            return Text(
+                              '16hr',
+                              style: textStyle,
+                            );
+                          case 34:
+                            return Text(
+                              '17hr',
+                              style: textStyle,
+                            );
+                          case 36:
+                            return Text(
+                              '18hr',
+                              style: textStyle,
+                            );
+                          case 38:
+                            return Text(
+                              '19hr',
+                              style: textStyle,
+                            );
+                          case 40:
+                            return Text(
+                              '20hr',
+                              style: textStyle,
+                            );
+                          case 42:
+                            return Text(
+                              '21hr',
+                              style: textStyle,
+                            );
+                          case 44:
+                            return Text(
+                              '22hr',
+                              style: textStyle,
+                            );
+                          case 46:
+                            return Text(
+                              '23hr',
+                              style: textStyle,
+                            );
+                          case 48:
+                            return Text(
+                              '24hr',
+                              style: textStyle,
+                            );
+                          default:
+                            return const SizedBox();
+                        }
+                      }),
+                  spots: [
+                    FlSpot(2, TotalCalculation.getTotalByDay(1, transaction)),
+                    FlSpot(4, TotalCalculation.getTotalByDay(2, transaction)),
+                    FlSpot(6, TotalCalculation.getTotalByDay(3, transaction)),
+                    FlSpot(8, TotalCalculation.getTotalByDay(4, transaction)),
+                    FlSpot(10, TotalCalculation.getTotalByDay(5, transaction)),
+                    FlSpot(12, TotalCalculation.getTotalByDay(6, transaction)),
+                    FlSpot(14, TotalCalculation.getTotalByDay(7, transaction)),
+                    FlSpot(16, TotalCalculation.getTotalByDay(8, transaction)),
+                    FlSpot(18, TotalCalculation.getTotalByDay(9, transaction)),
+                    FlSpot(20, TotalCalculation.getTotalByDay(10, transaction)),
+                    FlSpot(22, TotalCalculation.getTotalByDay(11, transaction)),
+                    FlSpot(24, TotalCalculation.getTotalByDay(12, transaction)),
+                    FlSpot(26, TotalCalculation.getTotalByDay(13, transaction)),
+                    FlSpot(28, TotalCalculation.getTotalByDay(14, transaction)),
+                    FlSpot(30, TotalCalculation.getTotalByDay(15, transaction)),
+                    FlSpot(32, TotalCalculation.getTotalByDay(16, transaction)),
+                    FlSpot(34, TotalCalculation.getTotalByDay(17, transaction)),
+                    FlSpot(36, TotalCalculation.getTotalByDay(18, transaction)),
+                    FlSpot(38, TotalCalculation.getTotalByDay(19, transaction)),
+                    FlSpot(40, TotalCalculation.getTotalByDay(20, transaction)),
+                    FlSpot(42, TotalCalculation.getTotalByDay(21, transaction)),
+                    FlSpot(44, TotalCalculation.getTotalByDay(22, transaction)),
+                    FlSpot(46, TotalCalculation.getTotalByDay(23, transaction)),
+                    FlSpot(48, TotalCalculation.getTotalByDay(24, transaction)),
+                  ]),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}

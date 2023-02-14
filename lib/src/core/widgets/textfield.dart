@@ -7,7 +7,7 @@ class TextInput extends StatelessWidget {
     this.hintStyle,
     required this.filled,
     required this.border,
-   required this.controller,
+    required this.controller,
     this.suffixIcon,
     this.keyboardType,
     this.focusedBorder,

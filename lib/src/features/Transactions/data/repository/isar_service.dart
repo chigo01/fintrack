@@ -87,11 +87,11 @@ class IsarServiceRepository implements TransactionRepository {
   }
 
   @override
-  Stream<double> totalTransactionByDay(DateTime date) async* {
+  Stream<double> totalTransactionByDay(int day) async* {
     final isar = await db;
     final query = isar.transactions
         .filter()
-        .dateEqualTo(DateTime(date.year, date.month, date.day))
+        .dateEqualTo(DateTime.now())
         .dateEqualTo(DateTime.now())
         .and()
         .transactionTypeEqualTo('expense', caseSensitive: false)
@@ -123,33 +123,4 @@ class IsarServiceRepository implements TransactionRepository {
       }
     }
   }
-}
-
-DateTime getDate(DateTime date) {
-  DateTime instance = DateTime.now();
-  Duration diff = instance.difference(date);
-
-  switch (diff.inDays) {
-    case 1:
-      return DateTime(instance.year, date.month, date.day);
-
-    case 2:
-      return DateTime(instance.year, date.month, date.day);
-
-    case 3:
-      return DateTime(instance.year, date.month, date.day);
-
-    case 4:
-      return DateTime(instance.year, date.month, date.day);
-
-    case 5:
-      return DateTime(instance.year, date.month, date.day);
-
-    case 6:
-      return DateTime(instance.year, date.month, date.day);
-
-    case 7:
-      return DateTime(instance.year, date.month, date.day);
-  }
-  return DateTime(instance.year, date.month, date.day);
 }

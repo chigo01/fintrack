@@ -1,5 +1,4 @@
 import 'package:fintrack/src/core/domain/models/entities/transaction_collection.dart';
-import 'package:fintrack/src/features/Transactions/model/family.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'repository/isar_service.dart';
@@ -16,7 +15,7 @@ final getTransactions = StreamProvider.autoDispose
   yield* isarService.getRecentTransactions(transactionType);
 });
 
-final getTransactions2 = StreamProvider.autoDispose
+final getAllTransactions = StreamProvider.autoDispose
     .family<List<Transaction>, String>((ref, transactionType) async* {
   final isarService = IsarServiceRepository();
   yield* isarService.getAllTransactions(transactionType);
@@ -28,10 +27,10 @@ final totalTransactions = StreamProvider.autoDispose
   yield* isarService.totalTransaction(transactionType);
 });
 
-final totalTransactionsByDay =
-    StreamProvider.family<double, DateTime>((ref, date) async* {
-  final isarService = IsarServiceRepository();
-  yield* isarService.totalTransactionByDay(
-    date,
-  );
-});
+// final totalTransactionsByDay =
+//     StreamProvider.family<double, DateTime>((ref, date) async* {
+//   final isarService = IsarServiceRepository();
+//   yield* isarService.totalTransactionByDay(
+//     date,
+//   );
+//});

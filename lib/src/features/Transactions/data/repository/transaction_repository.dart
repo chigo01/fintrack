@@ -6,7 +6,7 @@ abstract class TransactionRepository {
   Stream<List<Transaction>> getRecentTransactions(String transactionType);
   Stream<List<Transaction>> getAllTransactions(String transactionType);
   Stream<double> totalTransaction(String transactionType);
-  Stream<double> totalTransactionByDay(DateTime date);
+  Stream<double> totalTransactionByDay(int date);
 
   Future<void> updateTransaction(Transaction transaction);
   Future<void> deleteTransaction(int id);
