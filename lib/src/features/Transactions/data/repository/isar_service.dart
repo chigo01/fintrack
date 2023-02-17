@@ -87,23 +87,27 @@ class IsarServiceRepository implements TransactionRepository {
   }
 
   @override
-  Stream<double> totalTransactionByDay(int day) async* {
+  Stream<List<Transaction>> totalTransactionByDay(
+      String transactionType) async* {
     final isar = await db;
     final query = isar.transactions
         .filter()
-        .dateEqualTo(DateTime.now())
-        .dateEqualTo(DateTime.now())
+        .dateEqualTo(
+          DateTime.utc(
+            DateTime.now().year,
+            DateTime.now().month,
+            DateTime.now().day,
+          ),
+        )
         .and()
-        .transactionTypeEqualTo('expense', caseSensitive: false)
-        .amountProperty()
+        .transactionTypeEqualTo(transactionType, caseSensitive: false)
         .build();
 
     await for (final transaction in query.watch(fireImmediately: true)) {
       if (transaction.isEmpty) {
-        yield 0.0;
+        yield [];
       } else {
-        final result = transaction.reduce((value, element) => value + element);
-        yield result;
+        yield transaction;
       }
     }
   }

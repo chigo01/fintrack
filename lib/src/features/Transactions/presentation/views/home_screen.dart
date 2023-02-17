@@ -26,7 +26,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     ValueNotifier<int> currentIndex = useState(0);
     final expense = ref.watch(totalTransactions('expense')).valueOrNull;
     final income = ref.watch(totalTransactions('income')).valueOrNull;
-    final themeModeChecker = ref.read(themeProvider) == ThemeMode.dark;
+    final themeModeChecker = ref.watch(themeProvider) == ThemeMode.dark;
     final theme = ref.watch(themeProvider);
     return Scaffold(
       body: SingleChildScrollView(
@@ -128,14 +128,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         padding: const EdgeInsets.only(top: 14.0),
                         child: TabBody(
                           categories: categories,
-                          transType: 'Expense',
+                          transType: 'expense',
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 14.0),
                         child: TabBody(
                           categories: incomeCategory,
-                          transType: 'Income',
+                          transType: 'income',
                         ),
                       ),
                     ],

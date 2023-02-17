@@ -35,7 +35,7 @@ void main() {
   );
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends HookConsumerWidget {
   const MyApp({super.key});
 
   @override
@@ -50,7 +50,7 @@ class MyApp extends ConsumerWidget {
       darkTheme: AppTheme.dark,
       themeMode: themeModeState,
       debugShowCheckedModeBanner: false,
-      home: const AppActivity(),
+      home: const MyAppActivity(),
     );
   }
 }

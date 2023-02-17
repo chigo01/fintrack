@@ -17,14 +17,14 @@ List<Widget> pages = [
   const LightMode()
 ];
 
-class AppActivity extends ConsumerStatefulWidget {
-  const AppActivity({super.key});
+class MyAppActivity extends StatefulHookConsumerWidget {
+  const MyAppActivity({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _MyAppState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _MyAppActivityState();
 }
 
-class _MyAppState extends ConsumerState<AppActivity> {
+class _MyAppActivityState extends ConsumerState<MyAppActivity> {
   int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {

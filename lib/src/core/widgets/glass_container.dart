@@ -41,14 +41,15 @@ class GlassMorphic extends StatelessWidget {
           width: width,
           margin: margin,
           decoration: BoxDecoration(
-              // backgroundBlendMode: BlendMode.lighten,
-              borderRadius: border,
-              boxShadow: boxShadow,
-              border: Border.all(
-                width: borderWidth ?? 0,
-                color: borderColor,
-              ),
-              color: Theme.of(context).primaryColor.withOpacity(0.1)),
+            // backgroundBlendMode: BlendMode.lighten,
+            borderRadius: border,
+            boxShadow: boxShadow,
+            border: Border.all(
+              width: borderWidth ?? 0,
+              color: borderColor,
+            ),
+            color: Theme.of(context).primaryColor.withOpacity(0.1),
+          ),
           child: child,
         ),
       ),

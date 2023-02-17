@@ -107,11 +107,12 @@ class TotalCalculation {
           .where((element) => element.date.day == DateTime.now().day)
           .where((element) =>
               DateTime.utc(
-                element.date.year,
-                element.date.month,
-                element.date.day,
-                element.date.hour,
-              ).hour ==
+                    element.date.year,
+                    element.date.month,
+                    element.date.day,
+                    element.date.hour,
+                  ).hour +
+                  1 ==
               day)
           .map(
             (e) => e.amount,
@@ -125,5 +126,50 @@ class TotalCalculation {
     } else {
       return 100;
     }
+  }
+}
+
+class TransactionPerTime {
+  List<Transaction> getTransactionByDay(
+    List<Transaction>? transaction,
+  ) {
+    List<Transaction> trans = [];
+    if (transaction != null) {
+      trans = transaction
+          .where((element) => element.date.day == DateTime.now().day)
+          .toList();
+    }
+    return trans;
+  }
+
+  List<Transaction> getTransactionByWeek(List<Transaction>? transaction) {
+    List<Transaction> trans = [];
+    if (transaction != null) {
+      trans = transaction
+          .where((element) =>
+              element.date.weekOfMonth == DateTime.now().weekOfMonth)
+          .toList();
+    }
+    return trans;
+  }
+
+  List<Transaction> getTransactionByMonth(List<Transaction>? transaction) {
+    List<Transaction> trans = [];
+    if (transaction != null) {
+      trans = transaction
+          .where((element) => element.date.month == DateTime.now().month)
+          .toList();
+    }
+    return trans;
+  }
+
+  List<Transaction> getTransactionByYear(List<Transaction>? transaction) {
+    List<Transaction> trans = [];
+    if (transaction != null) {
+      trans = transaction
+          .where((element) => element.date.year == DateTime.now().year)
+          .toList();
+    }
+    return trans;
   }
 }

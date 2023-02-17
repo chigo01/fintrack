@@ -6,6 +6,7 @@ import 'package:fintrack/src/features/analysis/presentation/views/Time_tabs/toda
 import 'package:fintrack/src/features/analysis/presentation/views/Time_tabs/week.dart';
 import 'package:fintrack/src/features/analysis/presentation/views/Time_tabs/year.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -17,7 +18,6 @@ List<String> categoriesDate = [
   'Month',
   'Year',
 ];
-
 List<Widget> tabBody = [
   const TodayTab(),
   const WeekTab(),
@@ -28,18 +28,21 @@ final selectedIndex = StateProvider((ref) => 0);
 
 final selectedCategoryDay = StateProvider((ref) => categoriesDate[0]);
 
-class AnalysisScreen extends HookConsumerWidget {
-  const AnalysisScreen({Key? key}) : super(key: key);
+class AnalysisScreen extends StatefulHookConsumerWidget {
+  const AnalysisScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // print(transaction!
-    //     .where((element) => element.date.month == DateTime.february)
-    //     .map((e) => e.amount)
-    //     .reduce((value, element) => element + value));
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _AnalysisScreenScreenState();
+}
+
+class _AnalysisScreenScreenState extends ConsumerState<AnalysisScreen> {
+  @override
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final bool themeCheck = ref.watch(themeProvider) == ThemeMode.dark;
-    PageController pageController = PageController();
+    PageController pageController =
+        usePageController(initialPage: ref.watch(selectedIndex));
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -85,48 +88,41 @@ class AnalysisScreen extends HookConsumerWidget {
                     ],
                   ),
                   const SizedBox(height: 10),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Search',
-                            constraints: const BoxConstraints(
-                                maxHeight: 50, maxWidth: 300),
-                            hintStyle: theme.textTheme.bodySmall?.copyWith(
-                              color: themeCheck ? null : theme.primaryColor,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Search',
+                              constraints: const BoxConstraints(
+                                  maxHeight: 50, maxWidth: 300),
+                              hintStyle: theme.textTheme.bodySmall?.copyWith(
+                                color: themeCheck ? null : theme.primaryColor,
+                              ),
+                              suffixIcon: Icon(
+                                PhosphorIcons.magnifyingGlass,
+                                color: theme.primaryColor,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              filled: true,
+                              fillColor: theme.scaffoldBackgroundColor,
                             ),
-                            suffixIcon: Icon(
-                              PhosphorIcons.magnifyingGlass,
-                              color: theme.primaryColor,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide.none,
-                            ),
-                            filled: true,
-                            fillColor: themeCheck
-                                ? theme.scaffoldBackgroundColor
-                                : theme.primaryColor.withOpacity(0.2),
                           ),
-                        ),
-                        Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            color: theme.primaryColor.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(3),
-                          ),
-                          child: IconButton(
+                          IconButton(
                             onPressed: () {},
                             icon: const Icon(
                               PhosphorIcons.funnel,
                               size: 30,
                               color: AppColor.white,
                             ),
-                          ),
-                        )
-                      ])
+                          )
+                        ]),
+                  )
                 ]),
               ),
               Positioned(
@@ -159,26 +155,27 @@ class AnalysisScreen extends HookConsumerWidget {
                         ),
                         child: Row(
                           children: [
-                            for (var i = 0; i < categoriesDate.length; i++)
+                            for (var i = 0; i < tabBody.length; i++)
                               Expanded(
                                 child: Consumer(
                                   builder: (BuildContext context, WidgetRef ref,
                                       Widget? child) {
-                                    final index = ref.watch(selectedIndex) == i;
-                                    final elementAt =
+                                    final selected = ref.watch(selectedIndex);
+                                    final isSelected = selected == i;
+                                    final lastIndex =
                                         i == categoriesDate.length - 1;
 
                                     return AnimatedContainer(
                                       // clipBehavior: Clip.antiAlias,
-                                      width: elementAt ? 85 : 80,
+                                      width: lastIndex ? 85 : 80,
 
                                       height: 22,
                                       decoration: BoxDecoration(
-                                        color: index
+                                        color: isSelected
                                             ? theme.primaryColor
                                             : theme.scaffoldBackgroundColor,
                                         border: Border(
-                                          right: elementAt
+                                          right: lastIndex
                                               ? BorderSide.none
                                               : BorderSide(
                                                   width: 2,
@@ -187,37 +184,42 @@ class AnalysisScreen extends HookConsumerWidget {
                                         ),
                                       ),
                                       duration:
-                                          const Duration(milliseconds: 700),
+                                          const Duration(milliseconds: 500),
                                       curve: Curves.easeIn,
                                       child: Padding(
                                         padding: EdgeInsets.only(
                                           top: 2,
-                                          left: elementAt ? 20 : 9,
+                                          left: lastIndex ? 20 : 9,
                                         ),
                                         child: Center(
                                           child: Text(
                                             categoriesDate[i],
-                                            // style: const TextStyle(
-                                            //     color: AppColor.white),
+                                            style: TextStyle(
+                                              color: isSelected
+                                                  ? AppColor.white
+                                                  : themeCheck
+                                                      ? Colors.white
+                                                      : null,
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ).onTap(() {
-                                      ref
-                                          .read(selectedCategoryDay.notifier)
-                                          .state = categoriesDate[i];
+                                      // ref
+                                      //     .read(selectedCategoryDay.notifier)
+                                      //     .state = categoriesDate[i];
 
-                                      ref.read(selectedIndex.notifier).state =
-                                          i;
-                                      pageController.animateToPage(i,
-                                          duration:
-                                              const Duration(milliseconds: 300),
-                                          curve: Curves.easeIn);
+                                      pageController.animateToPage(
+                                        i,
+                                        duration:
+                                            const Duration(milliseconds: 1000),
+                                        curve: Curves.fastLinearToSlowEaseIn,
+                                      );
                                     });
                                   },
                                 ),
                               ),
-                          ],
+                          ], /**/
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -229,8 +231,9 @@ class AnalysisScreen extends HookConsumerWidget {
                           physics: const BouncingScrollPhysics(),
                           controller: pageController,
                           itemCount: tabBody.length,
-                          onPageChanged: (value) =>
-                              ref.read(selectedIndex.notifier).state = value,
+                          onPageChanged: (value) => ref
+                              .read(selectedIndex.notifier)
+                              .update((state) => value),
                           itemBuilder: (context, index) => tabBody[index],
                         ),
                       ),

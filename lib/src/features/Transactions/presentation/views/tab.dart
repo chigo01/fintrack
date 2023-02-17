@@ -4,6 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:collection/collection.dart';
 import 'package:fintrack/src/core/domain/models/category.dart';
 import 'package:fintrack/src/core/presentation/provider/themechanges.dart';
+import 'package:fintrack/src/core/presentation/widgets/trans_row.dart';
 import 'package:fintrack/src/core/route/route_navigations.dart';
 import 'package:fintrack/src/core/utils/extension.dart';
 import 'package:fintrack/src/core/utils/money.dart';
@@ -33,7 +34,7 @@ class TabBody extends StatefulHookConsumerWidget {
 class _TabBodyState extends ConsumerState<TabBody> {
   @override
   Widget build(BuildContext context) {
-    final themeModeChecker = ref.read(themeProvider) == ThemeMode.dark;
+    final themeModeChecker = ref.watch(themeProvider) == ThemeMode.dark;
     final currency = ref.watch(currencyProvider);
     final expense = ref.watch(totalTransactions('expense')).valueOrNull ?? 0.0;
     final income = ref.watch(totalTransactions('income')).valueOrNull ?? 0.0;
@@ -228,69 +229,24 @@ class _TabBodyState extends ConsumerState<TabBody> {
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 8.0,
                                 ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Row(
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 16,
-                                            backgroundColor:
-                                                Theme.of(context).primaryColor,
-                                            child: Icon(categoryIcon,
-                                                size: 20, color: Colors.white),
-                                          ),
-                                          const SizedBox(width: 2),
-                                          Expanded(
-                                            flex: 2,
-                                            child: Text(
-                                              data[index].category.capitalized,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall
-                                                  ?.copyWith(
-                                                    fontWeight: FontWeight.w200,
-                                                    fontSize: 10,
-                                                  ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(width: 70),
-                                    Expanded(
-                                      child: Text(
-                                        Money.percentage(
-                                          amount: data[index].amount,
-                                          totalAmount: totalAmount,
+                                child: TransactionRow(
+                                  width: 2,
+                                  categoryIcon: categoryIcon,
+                                  totalAmount: totalAmount,
+                                  transType: widget.transType,
+                                  currency: currency,
+                                  amount: data[index].amount,
+                                  text: Text(
+                                    data[index].category.capitalized,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.w200,
+                                          fontSize: 10,
                                         ),
-                                        style: const TextStyle(fontSize: 12),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 35),
-                                    Expanded(
-                                      child: Text(
-                                        Money.format(
-                                          value: data[index].amount,
-                                          symbol: currency,
-                                        ),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith(
-                                              fontSize: 12,
-                                              color:
-                                                  widget.transType == 'Expense'
-                                                      ? const Color(0xffFF4439)
-                                                      : const Color(0xff4CAF50),
-                                            ),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               );
                             },

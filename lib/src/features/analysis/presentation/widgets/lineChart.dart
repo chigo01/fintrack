@@ -21,9 +21,7 @@ class LineCharts extends HookConsumerWidget {
         //const Color(0xff00042b),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: themeCheck
-              ? const Color(0xff00042b)
-              : Colors.white.withOpacity(.8),
+          color: themeCheck ? const Color(0xff00042b) : Colors.white,
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.5),
@@ -33,7 +31,7 @@ class LineCharts extends HookConsumerWidget {
             ),
           ],
         ),
-        height: context.getHeight(0.25),
+        height: context.getHeight(0.20),
         width: context.getWidth(0.93),
 
         // color: const Color(0xff00042b),

@@ -1,4 +1,4 @@
-import 'package:fintrack/src/features/Transactions/presentation/views/transaction_entry.dart';
+import 'package:fintrack/src/core/utils/enum.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 StateProvider<int> currentIndex = StateProvider((ref) => 1);
