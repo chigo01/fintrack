@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:fintrack/src/core/domain/models/category.dart';
+import 'package:fintrack/src/core/domain/models/entities/transaction_collection.dart';
 import 'package:fintrack/src/core/presentation/provider/themechanges.dart';
 import 'package:fintrack/src/core/presentation/widgets/trans_row.dart';
 import 'package:fintrack/src/core/presentation/widgets/transactionHeader.dart';
@@ -10,6 +13,7 @@ import 'package:fintrack/src/core/widgets/category_widget.dart';
 import 'package:fintrack/src/core/widgets/glass_container.dart';
 import 'package:fintrack/src/features/Transactions/data/provider.dart';
 import 'package:fintrack/src/features/Transactions/presentation/provider/currency.dart';
+import 'package:fintrack/src/features/analysis/presentation/providers/filter.dart';
 import 'package:fintrack/src/features/analysis/presentation/widgets/lineChart.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -85,6 +89,7 @@ class MonthTransactionTabType extends HookConsumerWidget {
     final currency = ref.watch(currencyProvider);
     final TransactionPerTime time = TransactionPerTime();
     final formatDate = DateTimeFormatter();
+    bool isSearching = false;
 
     double totalAmount() {
       List<double> trans = [];
@@ -99,6 +104,19 @@ class MonthTransactionTabType extends HookConsumerWidget {
       return 0;
     }
 
+    List<Transaction> search = [];
+
+    if (ref.watch(query).isEmpty) {
+      search = time.getTransactionByMonth(transaction);
+    } else {
+      search = time
+          .getTransactionByMonth(transaction)
+          .where((element) => element.category
+              .toLowerCase()
+              .contains(ref.watch(query).toLowerCase()))
+          .toList();
+    }
+
     TextStyle textStyle = const TextStyle(
       fontSize: 7,
     );
@@ -110,15 +128,18 @@ class MonthTransactionTabType extends HookConsumerWidget {
           child: LineCharts(
             sideTitles: SideTitles(
               showTitles: true,
-              getTitlesWidget: (value, _) => Text(
-                DateFormat('d MMM').format(
-                  DateTime(
-                    DateTime.now().year,
-                    DateTime.now().month,
-                    value.toInt(),
+              getTitlesWidget: (value, _) => Padding(
+                padding: const EdgeInsets.only(right: 9.0, top: 5),
+                child: Text(
+                  DateFormat('d MMM').format(
+                    DateTime(
+                      DateTime.now().year,
+                      DateTime.now().month,
+                      value.toInt(),
+                    ),
                   ),
+                  style: textStyle,
                 ),
-                style: textStyle,
               ),
             ),
             spots: List.generate(
@@ -140,10 +161,13 @@ class MonthTransactionTabType extends HookConsumerWidget {
           width: context.getWidth(.9),
           child: ListView.builder(
               padding: const EdgeInsets.only(top: 12),
-              itemCount: time.getTransactionByMonth(transaction).length,
+              itemCount: search.length,
               physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
-                final element = time.getTransactionByMonth(transaction)[index];
+                final element = search[index];
+
+                //     :
+
                 final categoryIcon = categories
                     .singleWhereOrNull(
                         (value) => value.title == element.category)
@@ -184,7 +208,18 @@ class MonthTransactionTabType extends HookConsumerWidget {
                             paymentType: paymentIcon?.title),
                       ],
                     ),
-                  ),
+                  ).onTap(() {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => TransactionDetail(
+                    //       transaction: element,
+                    //       transactionType: _transactionType,
+                    //     ),
+                    //   ),
+                    // );
+                    log(element.name);
+                  }),
                 );
               }),
         ),

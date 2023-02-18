@@ -38,21 +38,7 @@ class _MyAppActivityState extends ConsumerState<MyAppActivity> {
           child: FabButton(
             theme: theme,
           )),
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0,
-      //   title: Text('Hi, Favour!',
-      //       style: Theme.of(context).textTheme.displayMedium?.copyWith(
-      //             fontSize: 20,
-      //             fontWeight: FontWeight.normal,
-      //             color: Theme.of(context).primaryColor,
-      //           )),
-      //   actions: [
-      //     Padding(
-      //       padding: const EdgeInsets.all(12.0),
-      //       child: PopMenuWidget(ref: ref, theme: theme),
-      //     ),
-      //   ],
+
       // ),
       body: PageTransitionSwitcher(
           duration: const Duration(milliseconds: 500),

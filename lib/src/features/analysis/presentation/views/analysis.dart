@@ -1,6 +1,7 @@
 import 'package:fintrack/src/core/presentation/provider/themechanges.dart';
 import 'package:fintrack/src/core/route/route_navigations.dart';
 import 'package:fintrack/src/core/utils/extension.dart';
+import 'package:fintrack/src/features/analysis/presentation/providers/filter.dart';
 import 'package:fintrack/src/features/analysis/presentation/views/Time_tabs/month.dart';
 import 'package:fintrack/src/features/analysis/presentation/views/Time_tabs/today.dart';
 import 'package:fintrack/src/features/analysis/presentation/views/Time_tabs/week.dart';
@@ -43,8 +44,10 @@ class _AnalysisScreenScreenState extends ConsumerState<AnalysisScreen> {
     final bool themeCheck = ref.watch(themeProvider) == ThemeMode.dark;
     PageController pageController =
         usePageController(initialPage: ref.watch(selectedIndex));
+    TextEditingController searchController = useTextEditingController();
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: SizedBox(
@@ -89,39 +92,31 @@ class _AnalysisScreenScreenState extends ConsumerState<AnalysisScreen> {
                   ),
                   const SizedBox(height: 10),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          TextField(
-                            decoration: InputDecoration(
-                              hintText: 'Search',
-                              constraints: const BoxConstraints(
-                                  maxHeight: 50, maxWidth: 300),
-                              hintStyle: theme.textTheme.bodySmall?.copyWith(
-                                color: themeCheck ? null : theme.primaryColor,
-                              ),
-                              suffixIcon: Icon(
-                                PhosphorIcons.magnifyingGlass,
-                                color: theme.primaryColor,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                              filled: true,
-                              fillColor: theme.scaffoldBackgroundColor,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              PhosphorIcons.funnel,
-                              size: 30,
-                              color: AppColor.white,
-                            ),
-                          )
-                        ]),
+                    padding: const EdgeInsets.fromLTRB(0, 0, 50, 0),
+                    child: TextField(
+                      onChanged: (value) => ref
+                          .read(query.notifier)
+                          .update((state) => state = value),
+                      controller: searchController,
+                      decoration: InputDecoration(
+                        hintText: 'Search',
+                        constraints:
+                            const BoxConstraints(maxHeight: 50, maxWidth: 300),
+                        hintStyle: theme.textTheme.bodySmall?.copyWith(
+                          color: themeCheck ? null : theme.primaryColor,
+                        ),
+                        suffixIcon: Icon(
+                          PhosphorIcons.magnifyingGlass,
+                          color: theme.primaryColor,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: theme.scaffoldBackgroundColor,
+                      ),
+                    ),
                   )
                 ]),
               ),

@@ -26,18 +26,3 @@ final totalTransactions = StreamProvider.autoDispose
   final isarService = IsarServiceRepository();
   yield* isarService.totalTransaction(transactionType);
 });
-
-final getAllTransactionsbyDay = StreamProvider.autoDispose
-    .family<List<Transaction>, String>((ref, transactionType) async* {
-  final isarService = IsarServiceRepository();
-
-  yield* isarService.totalTransactionByDay(transactionType);
-});
-
-// final totalTransactionsByDay =
-//     StreamProvider.family<double, DateTime>((ref, date) async* {
-//   final isarService = IsarServiceRepository();
-//   yield* isarService.totalTransactionByDay(
-//     date,
-//   );
-//});

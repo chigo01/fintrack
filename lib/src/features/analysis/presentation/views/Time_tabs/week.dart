@@ -11,6 +11,7 @@ import 'package:fintrack/src/core/widgets/category_widget.dart';
 import 'package:fintrack/src/core/widgets/glass_container.dart';
 import 'package:fintrack/src/features/Transactions/data/provider.dart';
 import 'package:fintrack/src/features/Transactions/presentation/provider/currency.dart';
+import 'package:fintrack/src/features/analysis/presentation/providers/filter.dart';
 import 'package:fintrack/src/features/analysis/presentation/widgets/lineChart.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -74,10 +75,7 @@ class WeekTransactionTypeTab extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final transaction =
         ref.watch(getAllTransactions(_transactionType)).valueOrNull;
-    // final transaction =
-    //     ref.watch(getAllTransactions(_transactionType)).valueOrNull;
-    // final transactionList =
-    //     ref.watch(getAllTransactionsbyDay(_transactionType));
+
     final theme = ref.watch(themeProvider);
     final currency = ref.watch(currencyProvider);
     final TransactionPerTime time = TransactionPerTime();
@@ -93,6 +91,19 @@ class WeekTransactionTypeTab extends HookConsumerWidget {
         return trans.reduce((value, element) => value + element);
       }
       return 0;
+    }
+
+    List<Transaction> search = [];
+
+    if (ref.watch(query).isEmpty) {
+      search = time.getTransactionByWeek(transaction);
+    } else {
+      search = time
+          .getTransactionByWeek(transaction)
+          .where((element) => element.category
+              .toLowerCase()
+              .contains(ref.watch(query).toLowerCase()))
+          .toList();
     }
 
     return Column(
@@ -111,10 +122,11 @@ class WeekTransactionTypeTab extends HookConsumerWidget {
           width: context.getWidth(.9),
           child: ListView.builder(
               padding: const EdgeInsets.only(top: 12),
-              itemCount: time.getTransactionByWeek(transaction).length,
+              shrinkWrap: true,
+              itemCount: search.length,
               physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
-                final element = time.getTransactionByWeek(transaction)[index];
+                final element = search[index];
                 final categoryIcon = categories
                     .singleWhereOrNull(
                         (value) => value.title == element.category)

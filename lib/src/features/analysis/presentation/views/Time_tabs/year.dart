@@ -1,4 +1,5 @@
 import 'package:fintrack/src/core/domain/models/category.dart';
+import 'package:fintrack/src/core/domain/models/entities/transaction_collection.dart';
 import 'package:fintrack/src/core/presentation/provider/themechanges.dart';
 import 'package:fintrack/src/core/presentation/widgets/trans_row.dart';
 import 'package:fintrack/src/core/presentation/widgets/transactionHeader.dart';
@@ -10,6 +11,7 @@ import 'package:fintrack/src/core/widgets/category_widget.dart';
 import 'package:fintrack/src/core/widgets/glass_container.dart';
 import 'package:fintrack/src/features/Transactions/data/provider.dart';
 import 'package:fintrack/src/features/Transactions/presentation/provider/currency.dart';
+import 'package:fintrack/src/features/analysis/presentation/providers/filter.dart';
 import 'package:fintrack/src/features/analysis/presentation/widgets/lineChart.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -74,8 +76,6 @@ class YearTransactionTypeTab extends HookConsumerWidget {
     final transaction =
         ref.watch(getAllTransactions(_transactionType)).valueOrNull;
 
-    // final transactionList =
-    //     ref.watch(getAllTransactionsbyDay(_transactionType));
     final theme = ref.watch(themeProvider);
     final currency = ref.watch(currencyProvider);
     final TransactionPerTime time = TransactionPerTime();
@@ -92,6 +92,19 @@ class YearTransactionTypeTab extends HookConsumerWidget {
         return trans.reduce((value, element) => value + element);
       }
       return 0;
+    }
+
+    List<Transaction> search = [];
+
+    if (ref.watch(query).isEmpty) {
+      search = time.getTransactionByYear(transaction);
+    } else {
+      search = time
+          .getTransactionByYear(transaction)
+          .where((element) => element.category
+              .toLowerCase()
+              .contains(ref.watch(query).toLowerCase()))
+          .toList();
     }
 
     TextStyle textStyle = const TextStyle(
@@ -131,10 +144,10 @@ class YearTransactionTypeTab extends HookConsumerWidget {
           width: context.getWidth(.9),
           child: ListView.builder(
               padding: const EdgeInsets.only(top: 12),
-              itemCount: time.getTransactionByYear(transaction).length,
+              itemCount: search.length,
               physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
-                final element = time.getTransactionByYear(transaction)[index];
+                final element = search[index];
                 final categoryIcon = categories
                     .singleWhereOrNull(
                         (value) => value.title == element.category)

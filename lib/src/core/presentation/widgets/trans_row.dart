@@ -64,7 +64,7 @@ class TransactionRow extends StatelessWidget {
                           Text(
                             date ?? '',
                             style: GoogleFonts.acme(
-                              fontSize: 10,
+                              fontSize: 8,
                               color: Colors.grey,
                             ),
                           ),
@@ -85,7 +85,6 @@ class TransactionRow extends StatelessWidget {
               style: const TextStyle(fontSize: 12),
             ),
           ),
-        const SizedBox(width: 35),
         name == null
             ? Expanded(
                 child: Text(
@@ -116,20 +115,23 @@ class TransactionRow extends StatelessWidget {
                                 : const Color(0xff4CAF50),
                           ),
                     ),
-                    const SizedBox(width: 10),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          paymentTypeIcon,
-                          size: 17,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        Text(
-                          paymentType ?? '',
-                          style: const TextStyle(fontSize: 8),
-                        )
-                      ],
+                    const Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            paymentTypeIcon,
+                            size: 17,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          Text(
+                            paymentType ?? '',
+                            style: const TextStyle(fontSize: 8),
+                          )
+                        ],
+                      ),
                     ),
                   ],
                 ),

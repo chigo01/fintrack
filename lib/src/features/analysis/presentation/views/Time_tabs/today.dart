@@ -11,6 +11,7 @@ import 'package:fintrack/src/core/utils/money.dart';
 import 'package:fintrack/src/core/widgets/category_widget.dart';
 import 'package:fintrack/src/core/widgets/glass_container.dart';
 import 'package:fintrack/src/features/Transactions/data/provider.dart';
+import 'package:fintrack/src/features/analysis/presentation/providers/filter.dart';
 import 'package:fintrack/src/features/analysis/presentation/widgets/lineChart.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -91,6 +92,19 @@ class TodayTransactionTypeTab extends HookConsumerWidget {
       return 0;
     }
 
+    List<Transaction> search = [];
+
+    if (ref.watch(query).isEmpty) {
+      search = time.getTransactionByDay(transaction);
+    } else {
+      search = time
+          .getTransactionByDay(transaction)
+          .where((element) => element.category
+              .toLowerCase()
+              .contains(ref.watch(query).toLowerCase()))
+          .toList();
+    }
+
     return Column(
       children: [
         Padding(
@@ -107,10 +121,10 @@ class TodayTransactionTypeTab extends HookConsumerWidget {
           width: context.getWidth(.9),
           child: ListView.builder(
               padding: const EdgeInsets.only(top: 12),
-              itemCount: time.getTransactionByDay(transaction).length,
+              itemCount: search.length,
               physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
-                final element = time.getTransactionByDay(transaction)[index];
+                final element = search[index];
                 final categoryIcon = categories
                     .singleWhereOrNull(
                         (value) => value.title == element.category)
