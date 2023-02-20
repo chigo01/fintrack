@@ -11,6 +11,7 @@ import 'package:fintrack/src/core/utils/money.dart';
 import 'package:fintrack/src/core/widgets/asyncvalue.dart';
 import 'package:fintrack/src/features/Transactions/data/provider.dart';
 import 'package:fintrack/src/features/Transactions/presentation/provider/currency.dart';
+import 'package:fintrack/src/features/analysis/presentation/providers/nav_analysis.dart';
 import 'package:fintrack/src/features/analysis/presentation/views/analysis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -102,16 +103,24 @@ class _TabBodyState extends ConsumerState<TabBody> {
                     child: Stack(
                       children: [
                         Container(
-                          width: context.getWidth(),
-                          height: 14,
+                          constraints: BoxConstraints(
+                            maxWidth: context.getWidth(),
+                            maxHeight: 14,
+                          ),
+                          // width: context.getWidth(),
+                          // height: 14,
                           decoration: BoxDecoration(
                             color: Colors.grey[300],
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         Container(
-                          width: linear.value,
-                          height: 14,
+                          constraints: BoxConstraints(
+                            maxWidth: linear.value,
+                            maxHeight: 14,
+                          ),
+                          // width:
+                          // height: 14,
                           decoration: BoxDecoration(
                             color: Theme.of(context).primaryColor,
                             borderRadius: BorderRadius.circular(10),
@@ -192,6 +201,7 @@ class _TabBodyState extends ConsumerState<TabBody> {
                     context.pushTransition(
                       const AnalysisScreen(),
                     );
+                    ref.read(navigatesAnalysis.notifier).push();
                   },
                   icon: Icon(
                     PhosphorIcons.arrowCircleRight,

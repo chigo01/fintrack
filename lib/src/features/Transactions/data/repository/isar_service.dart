@@ -68,7 +68,6 @@ class IsarServiceRepository implements TransactionRepository {
   Stream<double> totalTransaction(String transactionType) async* {
     final isar = await db;
     final query = isar.transactions
-        .where()
         .filter()
         .transactionTypeEqualTo(
           transactionType,

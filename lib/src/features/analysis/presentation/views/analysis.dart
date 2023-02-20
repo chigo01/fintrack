@@ -2,6 +2,7 @@ import 'package:fintrack/src/core/presentation/provider/themechanges.dart';
 import 'package:fintrack/src/core/route/route_navigations.dart';
 import 'package:fintrack/src/core/utils/extension.dart';
 import 'package:fintrack/src/features/analysis/presentation/providers/filter.dart';
+import 'package:fintrack/src/features/analysis/presentation/providers/nav_analysis.dart';
 import 'package:fintrack/src/features/analysis/presentation/views/Time_tabs/month.dart';
 import 'package:fintrack/src/features/analysis/presentation/views/Time_tabs/today.dart';
 import 'package:fintrack/src/features/analysis/presentation/views/Time_tabs/week.dart';
@@ -27,10 +28,12 @@ List<Widget> tabBody = [
 ];
 final selectedIndex = StateProvider((ref) => 0);
 
-final selectedCategoryDay = StateProvider((ref) => categoriesDate[0]);
+// final selectedCategoryDay = StateProvider((ref) => categoriesDate[0]);
 
 class AnalysisScreen extends StatefulHookConsumerWidget {
-  const AnalysisScreen({super.key});
+  const AnalysisScreen({
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -38,6 +41,11 @@ class AnalysisScreen extends StatefulHookConsumerWidget {
 }
 
 class _AnalysisScreenScreenState extends ConsumerState<AnalysisScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -68,6 +76,7 @@ class _AnalysisScreenScreenState extends ConsumerState<AnalysisScreen> {
                       IconButton(
                         onPressed: () {
                           context.maybePop();
+                          ref.read(navigatesAnalysis.notifier).pop();
                         },
                         icon: Icon(
                           PhosphorIcons.arrowBendUpLeft,
@@ -99,7 +108,7 @@ class _AnalysisScreenScreenState extends ConsumerState<AnalysisScreen> {
                           .update((state) => state = value),
                       controller: searchController,
                       decoration: InputDecoration(
-                        hintText: 'Search',
+                        hintText: 'Search By Category',
                         constraints:
                             const BoxConstraints(maxHeight: 50, maxWidth: 300),
                         hintStyle: theme.textTheme.bodySmall?.copyWith(
