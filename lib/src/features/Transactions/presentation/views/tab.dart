@@ -214,7 +214,9 @@ class _TabBodyState extends ConsumerState<TabBody> {
           ),
           const SizedBox(height: 5),
           SizedBox(
-            height: context.getHeight() * 0.17,
+            height: context.height >= 900
+                ? context.getHeight() * 0.23
+                : context.getHeight() * 0.17,
             child: Consumer(
               builder: (BuildContext context, WidgetRef ref, Widget? child) {
                 if (transactionsData.valueOrNull != null &&

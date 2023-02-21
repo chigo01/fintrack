@@ -4,11 +4,11 @@ import 'package:fintrack/src/core/domain/models/category.dart';
 import 'package:fintrack/src/core/domain/models/entities/transaction_collection.dart';
 import 'package:fintrack/src/core/presentation/provider/themechanges.dart';
 import 'package:fintrack/src/core/presentation/widgets/trans_row.dart';
-import 'package:fintrack/src/core/route/route_navigations.dart';
 import 'package:fintrack/src/core/utils/extension.dart';
 import 'package:fintrack/src/core/widgets/glass_container.dart';
 import 'package:fintrack/src/features/analysis/presentation/providers/nav_analysis.dart';
 import 'package:fintrack/src/features/analysis/presentation/views/detail.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -44,7 +44,11 @@ class TransactionList extends HookConsumerWidget {
     final navAnalysis = ref.watch(navigatesAnalysis);
 
     return SizedBox(
-      height: context.getHeight(navAnalysis ? .4 : .3),
+      height: context.getHeight(navAnalysis
+          ? .4
+          : context.height >= 900
+              ? 0.33
+              : .3),
       width: context.getWidth(.9),
       child: ListView.builder(
           padding: const EdgeInsets.only(top: 12),
@@ -91,7 +95,19 @@ class TransactionList extends HookConsumerWidget {
                     ],
                   )),
             ).onTap(() {
-              context.push(TransactionDetailScreen(transaction: element));
+              // context.push(TransactionDetailScreen(transaction: element))
+              showCupertinoModalPopup(
+                context: context,
+                builder: (context) => TransactionDetailScreen(
+                  transaction: element,
+                  categoryIcon: categoryIcon!,
+                  date: date,
+                  time: time,
+                  transactionType: _transactionType,
+                  paymentType: paymentIcon,
+                  currency: currency,
+                ),
+              );
               log(element.name);
             });
           }),
