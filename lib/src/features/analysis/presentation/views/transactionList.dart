@@ -51,50 +51,53 @@ class TransactionList extends HookConsumerWidget {
               : .3),
       width: context.getWidth(.9),
       child: ListView.builder(
-          padding: const EdgeInsets.only(top: 12),
-          itemCount: search.length,
-          physics: const BouncingScrollPhysics(),
-          itemBuilder: (context, index) {
-            final element = search[index];
-            final categoryIcon = categories
-                .singleWhereOrNull((value) => value.title == element.category)
-                ?.icon;
-            final paymentIcon = paymentCategory.singleWhereOrNull(
-                (value) => value.title == element.paymentType);
-            return Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: GlassMorphic(
-                  mode: theme,
-                  border: BorderRadius.circular(12),
-                  height: 80,
-                  width: 300,
-                  borderWidth: 2,
-                  borderColor: Colors.white30,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 10),
-                      TransactionRow(
-                          categoryIcon: categoryIcon,
-                          totalAmount: totalAmount,
-                          transType: _transactionType,
-                          currency: currency,
-                          amount: element.amount,
-                          text: Text(
-                            element.category.capitalized,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold),
-                          ),
-                          name: element.name.capitalized,
-                          date: '${date(element.date)}'
-                              '     ${time(element.date)}',
-                          width: 10,
-                          paymentTypeIcon: paymentIcon?.icon,
-                          paymentType: paymentIcon?.title),
-                    ],
-                  )),
-            ).onTap(() {
+        padding: const EdgeInsets.only(top: 12),
+        itemCount: search.length,
+        physics: const BouncingScrollPhysics(),
+        itemBuilder: (context, index) {
+          final element = search[index];
+          final categoryIcon = categories
+              .singleWhereOrNull((value) => value.title == element.category)
+              ?.icon;
+          final paymentIcon = paymentCategory
+              .singleWhereOrNull((value) => value.title == element.paymentType);
+          return Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: GlassMorphic(
+              mode: theme,
+              border: BorderRadius.circular(12),
+              height: 80,
+              width: 300,
+              borderWidth: 2,
+              borderColor: Colors.white30,
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  TransactionRow(
+                    categoryIcon: categoryIcon,
+                    totalAmount: totalAmount,
+                    transType: _transactionType,
+                    currency: currency,
+                    amount: element.amount,
+                    text: Text(
+                      element.category.capitalized,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: 10, fontWeight: FontWeight.bold),
+                    ),
+                    name: element.name.capitalized,
+                    date: '${date(element.date)}'
+                        '     ${time(element.date)}',
+                    width: 10,
+                    paymentTypeIcon: paymentIcon?.icon,
+                    paymentType: paymentIcon?.title,
+                  ),
+                ],
+              ),
+            ),
+          ).onTap(
+            () {
               // context.push(TransactionDetailScreen(transaction: element))
               showCupertinoModalPopup(
                 context: context,
@@ -109,8 +112,10 @@ class TransactionList extends HookConsumerWidget {
                 ),
               );
               log(element.name);
-            });
-          }),
+            },
+          );
+        },
+      ),
     );
   }
 }

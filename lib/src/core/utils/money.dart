@@ -78,7 +78,7 @@ class TotalCalculation {
     List<double> trans = [];
     if (transaction != null) {
       trans = transaction
-          .where((element) => element.date.month == DateTime.now().month)
+          .where((element) => element.date.year == DateTime.now().year)
           .where((element) =>
               DateTime.utc(
                 element.date.year,

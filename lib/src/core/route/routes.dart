@@ -22,12 +22,12 @@ class PageRouter {
     return PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => page,
         transitionDuration: const Duration(milliseconds: 500),
-        reverseTransitionDuration: const Duration(milliseconds: 400),
+        reverseTransitionDuration: const Duration(milliseconds: 500),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           animation = CurvedAnimation(
             parent: animation,
-            curve: Curves.fastLinearToSlowEaseIn,
-            reverseCurve: Curves.fastOutSlowIn,
+            curve: Curves.easeOut,
+            reverseCurve: Curves.easeOut,
           );
           return SlideTransition(
             position: Tween<Offset>(

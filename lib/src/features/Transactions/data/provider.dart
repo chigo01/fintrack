@@ -26,3 +26,7 @@ final totalTransactions = StreamProvider.autoDispose
   final isarService = IsarServiceRepository();
   yield* isarService.totalTransaction(transactionType);
 });
+final deleteTransactions = FutureProviderFamily<void, int>((ref, id) {
+  final isarService = IsarServiceRepository();
+  return isarService.deleteTransaction(id);
+});

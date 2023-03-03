@@ -41,7 +41,7 @@ class _MyAppActivityState extends ConsumerState<MyAppActivity> {
 
       // ),
       body: PageTransitionSwitcher(
-          duration: const Duration(milliseconds: 700),
+          duration: const Duration(milliseconds: 500),
           transitionBuilder: (widget, animation, anim2) {
             animation = CurvedAnimation(
               parent: animation,

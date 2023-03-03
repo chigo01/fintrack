@@ -8,10 +8,9 @@ import 'package:fintrack/src/features/Transactions/presentation/widgets/category
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class ExpenseTap extends StatelessWidget {
+class ExpenseTap extends StatefulWidget {
   const ExpenseTap({
     Key? key,
     required this.categoryName,
@@ -24,6 +23,12 @@ class ExpenseTap extends StatelessWidget {
     required this.amountTextEditingController,
     required this.descriptionTextEditingController,
     this.onTap,
+    this.isNav,
+    this.name,
+    this.amount,
+    this.description,
+    this.categoryTransactionName,
+    this.payMethod,
   }) : super(key: key);
 
   final String categoryName;
@@ -36,10 +41,31 @@ class ExpenseTap extends StatelessWidget {
   final TextEditingController? descriptionTextEditingController;
   final int paymentIndex;
   final VoidCallback? onTap;
+  final bool? isNav;
+  final String? name;
+  final String? amount;
+  final String? description;
+  final String? categoryTransactionName;
+  final String? payMethod;
+
+  @override
+  State<ExpenseTap> createState() => _ExpenseTapState();
+}
+
+class _ExpenseTapState extends State<ExpenseTap> {
+  String? dropDownValue;
+  String? dropdownValue2;
+  @override
+  void initState() {
+    dropDownValue = widget.categoryTransactionName ?? 'Food';
+    dropdownValue2 = widget.payMethod ?? 'Cash';
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    var currencySymbol = ref.watch(currencyProvider);
+    var currencySymbol = widget.ref.watch(currencyProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -47,7 +73,9 @@ class ExpenseTap extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: TextInput(
-            hintText: 'Name of $categoryName expense',
+            hintText: widget.name != null
+                ? widget.name!
+                : 'Name of ${widget.categoryName} expense',
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
                   fontSize: 15,
                 ),
@@ -56,27 +84,139 @@ class ExpenseTap extends StatelessWidget {
               borderSide: BorderSide.none,
               borderRadius: BorderRadius.circular(15),
             ),
-            controller: nameTextEditingController,
+            controller: widget.nameTextEditingController,
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 20,
-            horizontal: 25,
-          ),
-          child: Text(
-            'Category',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
+        const SizedBox(height: 20),
+        widget.isNav != null
+            ? Center(
+                child: Text(
+                  'Category',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: 10),
                 ),
+              )
+            : Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 20,
+                  horizontal: 25,
+                ),
+                child: Text(
+                  'Category',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                      ),
+                ),
+              ),
+        widget.isNav != null
+            ? SizedBox(
+                child: DropdownButton<String>(
+                    dropdownColor: Theme.of(context).scaffoldBackgroundColor,
+                    menuMaxHeight: 200,
+                    isExpanded: true,
+                    value: dropDownValue,
+                    items: categories
+                        .map((e) => e.title)
+                        .map<DropdownMenuItem<String>>(
+                          (value) => DropdownMenuItem<String>(
+                            value: value,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 50.0),
+                              child: Text(
+                                value,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                      letterSpacing: 2,
+                                    ),
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        dropDownValue = value!;
+                      });
+
+                      widget.ref
+                          .read(
+                            currentCategory.notifier,
+                          )
+                          .update(
+                            (state) => state = dropDownValue ?? '',
+                          );
+                      // print(widget.ref.watch(currentCategory));
+                    }),
+              )
+            : CategoriesSection(
+                category: widget.category,
+                theme: widget.theme,
+                ref: widget.ref,
+              ),
+        if (widget.isNav != null)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: Text(
+                'Payment Method',
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: 5,
+                    ),
+              ),
+            ),
           ),
-        ),
-        CategoriesSection(
-          category: category,
-          theme: theme,
-          ref: ref,
-        ),
+        if (widget.isNav != null)
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: SizedBox(
+              child: DropdownButton<String>(
+                  dropdownColor: Theme.of(context).scaffoldBackgroundColor,
+                  menuMaxHeight: 200,
+                  isExpanded: true,
+                  value: dropdownValue2,
+                  items: paymentCategory
+                      .map((e) => e.title)
+                      .map<DropdownMenuItem<String>>(
+                        (value) => DropdownMenuItem<String>(
+                          value: value,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 50.0),
+                            child: Text(
+                              value,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    letterSpacing: 2,
+                                  ),
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      dropdownValue2 = value!;
+                    });
+
+                    widget.ref
+                        .read(
+                          currentCategory.notifier,
+                        )
+                        .update(
+                          (state) => state = dropdownValue2 ?? '',
+                        );
+                    // print(widget.ref.watch(currentCategory));
+                  }),
+            ),
+          ),
         const SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -94,7 +234,7 @@ class ExpenseTap extends StatelessWidget {
                       child: Text(
                         'Amount',
                         style: TextStyle(
-                          color: themeModeCheck ? null : Colors.white,
+                          color: widget.themeModeCheck ? null : Colors.white,
                         ),
                       ),
                     ),
@@ -109,16 +249,17 @@ class ExpenseTap extends StatelessWidget {
                   child: Column(
                     children: [
                       TextInput(
-                        controller: amountTextEditingController,
+                        controller: widget.amountTextEditingController,
                         keyboardType: TextInputType.number,
                         filled: false,
                         prefixStyle:
                             const TextStyle(fontSize: 18, color: Colors.grey),
-                        hintText: '1000',
+                        hintText:
+                            widget.amount != null ? widget.amount! : '1000',
                         prefixText: currencySymbol,
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: themeModeCheck
+                            color: widget.themeModeCheck
                                 ? Colors.white38
                                 : Colors.black38,
                           ),
@@ -161,7 +302,7 @@ class ExpenseTap extends StatelessWidget {
                                           child: Text(
                                             currency.symbol,
                                             style: TextStyle(
-                                              color: themeModeCheck
+                                              color: widget.themeModeCheck
                                                   ? null
                                                   : Colors.white,
                                               fontSize: 17,
@@ -169,7 +310,7 @@ class ExpenseTap extends StatelessWidget {
                                           ),
                                         ),
                                       ).onTap(() {
-                                        ref
+                                        widget.ref
                                             .read(currencyProvider.notifier)
                                             .changeCurrency(currency.symbol);
                                       }),
@@ -194,13 +335,15 @@ class ExpenseTap extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       fontSize: 15,
                     ),
-                hintText: 'Description',
+                hintText: widget.description != null
+                    ? widget.description!
+                    : 'Description',
                 filled: false,
                 suffixIcon: CircleAvatar(
                   backgroundColor:
                       Theme.of(context).primaryColor.withOpacity(0.1),
                   child: IconButton(
-                    onPressed: onTap,
+                    onPressed: widget.onTap,
                     icon: Icon(
                       PhosphorIcons.camera,
                       size: 20,
@@ -211,12 +354,12 @@ class ExpenseTap extends StatelessWidget {
                 border: const OutlineInputBorder(
                   borderSide: BorderSide.none,
                 ),
-                controller: descriptionTextEditingController,
+                controller: widget.descriptionTextEditingController,
               ),
               Container(
                 height: 1,
                 width: double.infinity,
-                color: themeModeCheck ? Colors.white38 : Colors.black38,
+                color: widget.themeModeCheck ? Colors.white38 : Colors.black38,
               ),
               Padding(
                 padding: EdgeInsets.only(left: context.width / 1.49),
@@ -229,29 +372,30 @@ class ExpenseTap extends StatelessWidget {
                   ),
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Payment Mode ',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                        ),
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: context.width * 0.12),
-                    child: CategoryWidgets(
-                      categoryIndex: paymentIndex,
-                      theme: theme,
-                      ref: ref,
-                      category: paymentCategory,
-                      categoryStateNotifier: paymentName,
+              if (widget.isNav == null)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Payment Mode ',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
                     ),
-                  )
-                ],
-              ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: context.width * 0.12),
+                      child: CategoryWidgets(
+                        categoryIndex: widget.paymentIndex,
+                        theme: widget.theme,
+                        ref: widget.ref,
+                        category: paymentCategory,
+                        categoryStateNotifier: paymentName,
+                      ),
+                    )
+                  ],
+                ),
             ],
           ),
         ),

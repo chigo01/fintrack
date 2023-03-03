@@ -25,12 +25,12 @@ void main() {
   );
 
   runApp(
-    ProviderScope(
-      child: DevicePreview(
-        enabled: !kReleaseMode,
-        builder: (context) => const MyApp(), // Wrap your app
-      ),
-      // child: MyApp(),
+    const ProviderScope(
+      // child: DevicePreview(
+      //   enabled: !kReleaseMode,
+      //   builder: (context) => const MyApp(), // Wrap your app
+      // ),
+      child: MyApp(),
     ),
   );
 }

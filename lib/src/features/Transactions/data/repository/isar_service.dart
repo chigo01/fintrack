@@ -47,9 +47,11 @@ class IsarServiceRepository implements TransactionRepository {
   }
 
   @override
-  Future<void> deleteTransaction(int id) {
-    // TODO: implement deleteTransaction
-    throw UnimplementedError();
+  Future<void> deleteTransaction(int id) async {
+    final isar = await db;
+    isar.writeTxn(() async {
+      await isar.transactions.delete(id);
+    });
   }
 
   @override

@@ -46,8 +46,8 @@ class GlassMorphicNavBar extends StatelessWidget {
                     children: [
                       Expanded(
                         child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 1000),
-                          curve: Curves.decelerate,
+                          duration: const Duration(milliseconds: 700),
+                          curve: Curves.easeIn,
                           padding: EdgeInsets.only(
                             bottom: indexCheck ? 12 : 0,
                             top: indexCheck ? 0 : 12,
