@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fintrack/src/core/domain/models/entities/transaction_collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -30,3 +32,25 @@ final deleteTransactions = FutureProviderFamily<void, int>((ref, id) {
   final isarService = IsarServiceRepository();
   return isarService.deleteTransaction(id);
 });
+
+// final updateTransactions = FutureProviderFamily<void, Transaction>((ref, id) {
+//   final isarService = IsarServiceRepository();
+//   return isarService.updateTransaction(id);
+// });
+
+class UpdateTransaction extends AsyncNotifier {
+  @override
+  FutureOr build() {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+
+  Future<void> updateTransactions(Transaction transaction, int id) {
+    final isarService = IsarServiceRepository();
+    return isarService.updateTransaction(transaction, id);
+  }
+}
+
+final updateTransaction = AsyncNotifierProvider(
+  () => UpdateTransaction(),
+);

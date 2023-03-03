@@ -2,12 +2,12 @@ import 'package:device_preview/device_preview.dart';
 import 'package:fintrack/src/core/presentation/app.dart';
 import 'package:fintrack/src/core/presentation/provider/themechanges.dart';
 import 'package:fintrack/src/core/theme/app_theme.dart';
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-// import 'package:stack_trace/stack_trace.dart' as stack_trace;
+// import 'package:stack_trace/stack_trace.dart' as stack_tracse;
 
 void main() {
   Paint.enableDithering = true;

@@ -38,9 +38,7 @@ class IncomeTab extends StatelessWidget {
   Widget build(BuildContext context) {
     var currencySymbol = ref.watch(currencyProvider);
     var incomeCategoryName = ref.watch(incomeName);
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       const SizedBox(height: 30),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -228,7 +226,7 @@ class IncomeTab extends StatelessWidget {
                   color: Colors.grey,
                 ),
               ),
-            ),
+            ).onTap(() {}),
           ],
         ),
       ),

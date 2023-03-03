@@ -3,10 +3,10 @@
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:fintrack/src/core/utils/cam.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import 'package:fintrack/src/core/domain/models/entities/transaction_collection.dart';
@@ -22,7 +22,7 @@ import 'package:fintrack/src/features/Transactions/presentation/widgets/tabs/inc
 
 import '../../../../core/utils/enum.dart';
 
-final imagePath = StateProvider<String?>((ref) => null);
+//final imagePath = StateProvider<String?>((ref) => null);
 
 class AddTransactionsScreen extends StatefulHookConsumerWidget {
   const AddTransactionsScreen({
@@ -35,6 +35,7 @@ class AddTransactionsScreen extends StatefulHookConsumerWidget {
     String? transactionType,
     this.categoryTransactionName,
     this.date,
+    this.id,
   }) : _transactionType = transactionType;
 
   final bool? isNav;
@@ -45,6 +46,7 @@ class AddTransactionsScreen extends StatefulHookConsumerWidget {
   final String? categoryTransactionName;
   final String? _transactionType;
   final String? payMent;
+  final int? id;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -55,6 +57,9 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
   DateTime date = DateTime.now();
   DateTimeFormatter format = DateTimeFormatter();
   // final ScrollController _scrollController = ScrollController();
+  void pickedImage() {
+    getImage(ref);
+  }
 
   @override
   void initState() {
@@ -75,22 +80,23 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
     final amountController = useTextEditingController();
     final descriptionController = useTextEditingController();
     final imageUrl = ref.watch(imagePath);
+
     // String imagePath = '';
-    final ImagePicker picker = ImagePicker();
 
-    Future<void> getImage() async {
-      final pickedFile = await picker.pickImage(
-        source: ImageSource.gallery,
-        maxHeight: double.infinity,
-        maxWidth: double.infinity,
-      );
+    // Future<void> getImage() async {
+    //   final ImagePicker picker = ImagePicker();
+    //   final pickedFile = await picker.pickImage(
+    //     source: ImageSource.gallery,
+    //     maxHeight: double.infinity,
+    //     maxWidth: double.infinity,
+    //   );
 
-      if (pickedFile != null) {
-        ref.read(imagePath.notifier).update(
-              (state) => state = pickedFile.path,
-            );
-      }
-    }
+    //   if (pickedFile != null) {
+    //     ref.read(imagePath.notifier).update(
+    //           (state) => state = pickedFile.path,
+    //         );
+    //   }
+    // }
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -120,21 +126,38 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
                 ],
               ),
             ).onTap(() {
-              ref.read(
-                addTransaction(
-                  Transaction(
-                    name: nameController.text,
-                    amount: double.parse(amountController.text),
-                    date: date,
-                    category:
-                        currentTransaction ? categoryName : incomeCategory,
-                    transactionType: currentTransactionType.name,
-                    description: descriptionController.text,
-                    imageUrl: imageUrl,
-                    paymentType: currentTransaction ? payment : null,
-                  ),
-                ),
-              );
+              widget.isNav == true
+                  ? ref.read(updateTransaction.notifier).updateTransactions(
+                        Transaction(
+                          name: nameController.text,
+                          amount: double.parse(amountController.text),
+                          date: widget.date!,
+                          category: currentTransaction
+                              ? categoryName
+                              : incomeCategory,
+                          transactionType: currentTransactionType.name,
+                          description: descriptionController.text,
+                          imageUrl: imageUrl,
+                          paymentType: currentTransaction ? payment : null,
+                        ),
+                        widget.id ?? 0,
+                      )
+                  : ref.read(
+                      addTransaction(
+                        Transaction(
+                          name: nameController.text,
+                          amount: double.parse(amountController.text),
+                          date: date,
+                          category: currentTransaction
+                              ? categoryName
+                              : incomeCategory,
+                          transactionType: currentTransactionType.name,
+                          description: descriptionController.text,
+                          imageUrl: imageUrl,
+                          paymentType: currentTransaction ? payment : null,
+                        ),
+                      ),
+                    );
 
               context.maybePop();
 
@@ -217,7 +240,7 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
                           amountTextEditingController: amountController,
                           descriptionTextEditingController:
                               descriptionController,
-                          onTap: getImage,
+                          onTap: pickedImage,
                           name: widget.isNav == true ? widget.name : null,
                           amount: widget.isNav == true ? widget.amount : null,
                           description:
@@ -225,7 +248,8 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
                           isNav: widget.isNav == true ? widget.isNav : null,
                           categoryTransactionName:
                               widget.categoryTransactionName,
-                          payMethod: widget.payMent!,
+                          payMethod:
+                              widget.isNav == true ? widget.payMent : null,
                         ),
                         IncomeTab(
                           categoryName: categoryName,

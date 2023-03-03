@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -183,6 +184,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
                       message: 'Clear All',
                       child: IconButton(
                         onPressed: () {
+                          log(widget.transaction.imageUrl ?? 'h');
                           showDialog<bool?>(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
@@ -240,18 +242,23 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
                       message: 'Edit',
                       child: IconButton(
                           onPressed: () {
-                            context.pushTransition(
-                              AddTransactionsScreen(
-                                isNav: true,
-                                name: widget.transaction.name,
-                                amount: widget.transaction.amount.toString(),
-                                description: widget.transaction.description,
-                                date: widget.transaction.date,
-                                categoryTransactionName:
-                                    widget.transaction.category,
-                                payMent: widget.transaction.paymentType ?? '',
-                              ),
-                            );
+                            context
+                                .pushTransition(
+                                  AddTransactionsScreen(
+                                    isNav: true,
+                                    name: widget.transaction.name,
+                                    amount:
+                                        widget.transaction.amount.toString(),
+                                    description: widget.transaction.description,
+                                    date: widget.transaction.date,
+                                    categoryTransactionName:
+                                        widget.transaction.category,
+                                    payMent:
+                                        widget.transaction.paymentType ?? '',
+                                    id: widget.transaction.id,
+                                  ),
+                                )
+                                .whenComplete(() => Navigator.pop(context));
                           },
                           icon: const Icon(Icons.edit),
                           color: Theme.of(context).primaryColor),

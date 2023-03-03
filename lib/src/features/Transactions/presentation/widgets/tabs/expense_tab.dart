@@ -208,7 +208,7 @@ class _ExpenseTapState extends State<ExpenseTap> {
 
                     widget.ref
                         .read(
-                          currentCategory.notifier,
+                          paymentName.notifier,
                         )
                         .update(
                           (state) => state = dropdownValue2 ?? '',

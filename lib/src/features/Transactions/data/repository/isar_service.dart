@@ -61,9 +61,24 @@ class IsarServiceRepository implements TransactionRepository {
   }
 
   @override
-  Future<void> updateTransaction(Transaction transaction) {
-    // TODO: implement updateTransaction
-    throw UnimplementedError();
+  Future<void> updateTransaction(Transaction transaction, int id) async {
+    final isar = await db;
+    final transactionId = isar.transactions;
+
+    isar.writeTxn(() async {
+      final transactions = await transactionId.get(id);
+      transactions!
+        ..amount = transaction.amount
+        ..date = transaction.date
+        ..description = transaction.description
+        ..transactionType = transaction.transactionType
+        ..imageUrl = transaction.imageUrl
+        ..name = transaction.name
+        ..paymentType = transaction.paymentType
+        ..category = transaction.category;
+
+      await transactionId.put(transactions);
+    });
   }
 
   @override

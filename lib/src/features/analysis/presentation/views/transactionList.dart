@@ -112,6 +112,7 @@ class TransactionList extends HookConsumerWidget {
                 ),
               );
               log(element.name);
+              log(element.imageUrl!);
             },
           );
         },

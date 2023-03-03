@@ -7,7 +7,6 @@ abstract class TransactionRepository {
   Stream<List<Transaction>> getAllTransactions(String transactionType);
   Stream<double> totalTransaction(String transactionType);
 
-
-  Future<void> updateTransaction(Transaction transaction);
+  Future<void> updateTransaction(Transaction transaction, int id);
   Future<void> deleteTransaction(int id);
 }
