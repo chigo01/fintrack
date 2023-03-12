@@ -3,6 +3,7 @@ import 'package:fintrack/src/core/route/route_navigations.dart';
 import 'package:fintrack/src/core/theme/app_color.dart';
 import 'package:fintrack/src/features/Transactions/presentation/views/transaction_entry.dart';
 import 'package:fintrack/src/features/Transactions/theme.dart';
+import 'package:fintrack/src/features/goals/presentation/views/choose_goal.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -27,7 +28,7 @@ class FabButton extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       ringDiameter: 300,
       ringColor:
-          Theme.of(context).primaryColor.withOpacity(0.1), //themeCheck.color,
+          Theme.of(context).primaryColor.withOpacity(.5), //themeCheck.color,
       ringWidth: 100,
       fabOpenIcon: const Icon(Icons.add, color: AppColor.white),
       fabCloseIcon: const Icon(Icons.close, color: AppColor.white),
@@ -55,9 +56,10 @@ class FabButton extends StatelessWidget {
             ),
             Text(
               'Transactions',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontSize: 9,
-                  ),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(fontSize: 9, color: AppColor.white),
               maxLines: 1,
             )
           ],
@@ -65,34 +67,40 @@ class FabButton extends StatelessWidget {
         FabChildren(children: [
           FabWidget(
             color: const Color(0XFF7d42ca),
-            icon: PhosphorIcons.walletLight,
-            onTap: (() {}),
-          ),
-          Text(
-            'Budgets',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontSize: 9,
-                ),
-            maxLines: 1,
-          )
-        ]),
-        FabChildren(children: [
-          FabWidget(
-            color: const Color(0xffFF6B07),
-            icon: PhosphorIcons.notePencil,
+            icon: PhosphorIcons.chalkboardSimple,
             onTap: (() {
-              context.push(const LightMode());
+              context.push(const ChooseGoalScreen());
               // context.maybePop();
             }),
           ),
           Text(
-            'Notes',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontSize: 9,
-                ),
+            'Goals',
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(fontSize: 9, color: AppColor.white),
             maxLines: 1,
           )
         ]),
+        FabChildren(
+          children: [
+            FabWidget(
+              color: const Color(0xffFF6B07),
+              icon: PhosphorIcons.notePencil,
+              onTap: (() {
+                context.push(const LightMode());
+              }),
+            ),
+            Text(
+              'Notes',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(fontSize: 9, color: AppColor.white),
+              maxLines: 1,
+            )
+          ],
+        ),
       ],
     );
   }

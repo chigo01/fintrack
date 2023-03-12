@@ -40,7 +40,7 @@ class _TabBodyState extends ConsumerState<TabBody> {
     final expense = ref.watch(totalTransactions('expense')).valueOrNull ?? 0.0;
     final income = ref.watch(totalTransactions('income')).valueOrNull ?? 0.0;
     final transactionsData = ref.watch(getTransactions(widget.transType));
-    final value = (expense) / (income) * context.getWidth();
+    final double value = (expense) / (income) * context.getWidth();
     final linear = useLinearProgress(value);
     final totalAmount =
         ref.watch(totalTransactions(widget.transType)).valueOrNull ?? 0.0;
@@ -116,7 +116,7 @@ class _TabBodyState extends ConsumerState<TabBody> {
                         ),
                         Container(
                           constraints: BoxConstraints(
-                            maxWidth: linear.value,
+                            maxWidth: linear.value.isNaN ? 12 : linear.value,
                             maxHeight: 14,
                           ),
                           // width:

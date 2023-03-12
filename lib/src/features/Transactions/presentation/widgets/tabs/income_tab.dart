@@ -5,12 +5,13 @@ import 'package:fintrack/src/core/widgets/textfield.dart';
 import 'package:fintrack/src/features/Transactions/presentation/provider/currency.dart';
 import 'package:fintrack/src/features/Transactions/presentation/provider/current_page_provider.dart';
 import 'package:fintrack/src/features/Transactions/presentation/widgets/category_section.dart';
+import 'package:fintrack/src/features/Transactions/presentation/widgets/dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class IncomeTab extends StatelessWidget {
+class IncomeTab extends StatefulWidget {
   const IncomeTab({
     super.key,
     required this.categoryName,
@@ -22,6 +23,13 @@ class IncomeTab extends StatelessWidget {
     required this.nameTextEditingController,
     required this.amountTextEditingController,
     required this.descriptionTextEditingController,
+    this.isNav,
+    this.name,
+    this.amount,
+    this.description,
+    this.categoryTransactionName,
+    this.onTap,
+    // required this.transactionType,
   });
 
   final String categoryName;
@@ -33,18 +41,60 @@ class IncomeTab extends StatelessWidget {
   final TextEditingController nameTextEditingController;
   final TextEditingController amountTextEditingController;
   final TextEditingController? descriptionTextEditingController;
+  final bool? isNav;
+  final String? name;
+  final String? amount;
+  final String? description;
+  final String? categoryTransactionName;
+  final VoidCallback? onTap;
+  // final String transactionType;
+
+  @override
+  State<IncomeTab> createState() => _IncomeTabState();
+}
+
+class _IncomeTabState extends State<IncomeTab> {
+  String? _dropDownValue;
+
+  @override
+  void initState() {
+    _dropDownValue = widget.categoryTransactionName ?? 'Business';
+
+    super.initState();
+  }
+
+  void onChanged(
+    String? value,
+  ) {
+    setState(() {
+      _dropDownValue = value!;
+    });
+
+    widget.ref
+        .read(
+          incomeName.notifier,
+        )
+        .update(
+          (state) => state = _dropDownValue ?? '',
+        );
+  }
 
   @override
   Widget build(BuildContext context) {
-    var currencySymbol = ref.watch(currencyProvider);
-    var incomeCategoryName = ref.watch(incomeName);
+    var currencySymbol = widget.ref.watch(currencyProvider);
+    var incomeCategoryName = widget.ref.watch(incomeName);
+    final bool isNameCategory =
+        incomeCategory.map((e) => e.title).toList().contains(_dropDownValue);
+
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       const SizedBox(height: 30),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30.0),
         child: TextInput(
-          controller: nameTextEditingController,
-          hintText: 'Name of $incomeCategoryName Income',
+          controller: widget.nameTextEditingController,
+          hintText: widget.name != null
+              ? widget.name!
+              : 'Name of $incomeCategoryName Income',
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
                 fontSize: 15,
               ),
@@ -68,16 +118,26 @@ class IncomeTab extends StatelessWidget {
               ),
         ),
       ),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40.0),
-        child: CategoryWidgets(
-          categoryIndex: paymentIndex,
-          theme: theme,
-          ref: ref,
-          category: incomeCategory,
-          categoryStateNotifier: incomeName,
-        ),
-      ),
+      widget.isNav != null
+          ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: dropDown(
+                categories: incomeCategory,
+                context: context,
+                dropDownValue: isNameCategory ? _dropDownValue : 'Business',
+                onChanged: onChanged,
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40.0),
+              child: CategoryWidgets(
+                categoryIndex: widget.paymentIndex,
+                theme: widget.theme,
+                ref: widget.ref,
+                category: incomeCategory,
+                categoryStateNotifier: incomeName,
+              ),
+            ),
       const SizedBox(height: 10),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -95,7 +155,7 @@ class IncomeTab extends StatelessWidget {
                     child: Text(
                       'Amount',
                       style: TextStyle(
-                        color: themeModeCheck ? null : Colors.white,
+                        color: widget.themeModeCheck ? null : Colors.white,
                       ),
                     ),
                   ),
@@ -110,17 +170,18 @@ class IncomeTab extends StatelessWidget {
                 child: Column(
                   children: [
                     TextInput(
-                      controller: amountTextEditingController,
+                      controller: widget.amountTextEditingController,
                       keyboardType: TextInputType.number,
                       filled: false,
                       prefixStyle:
                           const TextStyle(fontSize: 18, color: Colors.grey),
-                      hintText: '1000',
+                      hintText: widget.amount != null ? widget.amount! : '1000',
                       prefixText: currencySymbol,
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                          color:
-                              themeModeCheck ? Colors.white38 : Colors.black38,
+                          color: widget.themeModeCheck
+                              ? Colors.white38
+                              : Colors.black38,
                         ),
                         borderRadius: BorderRadius.circular(
                           10,
@@ -159,7 +220,7 @@ class IncomeTab extends StatelessWidget {
                                         child: Text(
                                           currency.symbol,
                                           style: TextStyle(
-                                            color: themeModeCheck
+                                            color: widget.themeModeCheck
                                                 ? null
                                                 : Colors.white,
                                             fontSize: 17,
@@ -167,7 +228,7 @@ class IncomeTab extends StatelessWidget {
                                         ),
                                       ),
                                     ).onTap(() {
-                                      ref
+                                      widget.ref
                                           .read(currencyProvider.notifier)
                                           .changeCurrency(currency.symbol);
                                     }),
@@ -189,17 +250,19 @@ class IncomeTab extends StatelessWidget {
         child: Column(
           children: [
             TextInput(
-              controller: descriptionTextEditingController,
+              controller: widget.descriptionTextEditingController,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontSize: 15,
                   ),
-              hintText: 'Description',
+              hintText: widget.description != null
+                  ? widget.description!
+                  : 'Description',
               filled: false,
               suffixIcon: CircleAvatar(
                 backgroundColor:
                     Theme.of(context).primaryColor.withOpacity(0.1),
                 child: IconButton(
-                  onPressed: (() {}),
+                  onPressed: widget.onTap,
                   icon: Icon(
                     PhosphorIcons.camera,
                     size: 20,
@@ -214,7 +277,7 @@ class IncomeTab extends StatelessWidget {
             Container(
               height: 1,
               width: double.infinity,
-              color: themeModeCheck ? Colors.white38 : Colors.black38,
+              color: widget.themeModeCheck ? Colors.white38 : Colors.black38,
             ),
             Padding(
               padding: EdgeInsets.only(left: context.width / 1.49),
@@ -226,7 +289,7 @@ class IncomeTab extends StatelessWidget {
                   color: Colors.grey,
                 ),
               ),
-            ).onTap(() {}),
+            ),
           ],
         ),
       ),

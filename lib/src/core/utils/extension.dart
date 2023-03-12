@@ -33,6 +33,7 @@ extension ColorExtension on bool {
 extension StringExtension on String {
   String get capitalized =>
       '${this[0].toUpperCase()}${substring(1).toLowerCase()}';
+  double get toDouble => double.tryParse(this) ?? 0;
 }
 
 extension DateTimeExtension on DateTime {

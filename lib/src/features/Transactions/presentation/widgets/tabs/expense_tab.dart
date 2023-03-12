@@ -5,6 +5,7 @@ import 'package:fintrack/src/core/widgets/textfield.dart';
 import 'package:fintrack/src/features/Transactions/presentation/provider/currency.dart';
 import 'package:fintrack/src/features/Transactions/presentation/provider/current_page_provider.dart';
 import 'package:fintrack/src/features/Transactions/presentation/widgets/category_section.dart';
+import 'package:fintrack/src/features/Transactions/presentation/widgets/dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -29,6 +30,7 @@ class ExpenseTap extends StatefulWidget {
     this.description,
     this.categoryTransactionName,
     this.payMethod,
+    required this.transactionType,
   }) : super(key: key);
 
   final String categoryName;
@@ -47,25 +49,66 @@ class ExpenseTap extends StatefulWidget {
   final String? description;
   final String? categoryTransactionName;
   final String? payMethod;
+  final String transactionType;
 
   @override
   State<ExpenseTap> createState() => _ExpenseTapState();
 }
 
 class _ExpenseTapState extends State<ExpenseTap> {
-  String? dropDownValue;
-  String? dropdownValue2;
+  String? _dropDownValue;
+  String? _dropdownValue2;
+  String? shop;
   @override
   void initState() {
-    dropDownValue = widget.categoryTransactionName ?? 'Food';
-    dropdownValue2 = widget.payMethod ?? 'Cash';
+    _dropDownValue = widget.categoryTransactionName ?? 'Food';
+
+    _dropdownValue2 = widget.payMethod ?? 'Cash';
 
     super.initState();
+  }
+
+  void onChanged(
+    String? value,
+  ) {
+    setState(() {
+      _dropDownValue = value!;
+    });
+
+    widget.ref
+        .read(
+          currentCategory.notifier,
+        )
+        .update(
+          (state) => state = _dropDownValue ?? '',
+        );
+  }
+
+  void paymentMethod(
+    String? value,
+  ) {
+    setState(() {
+      _dropdownValue2 = value!;
+    });
+
+    widget.ref
+        .read(
+          paymentName.notifier,
+        )
+        .update(
+          (state) => state = _dropdownValue2 ?? '',
+        );
   }
 
   @override
   Widget build(BuildContext context) {
     var currencySymbol = widget.ref.watch(currencyProvider);
+
+    final bool isNameCategory =
+        categories.map((e) => e.title).toList().contains(_dropDownValue);
+    final bool isPaymentMethod =
+        paymentCategory.map((e) => e.title).toList().contains(_dropdownValue2);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -112,46 +155,14 @@ class _ExpenseTapState extends State<ExpenseTap> {
                 ),
               ),
         widget.isNav != null
-            ? SizedBox(
-                child: DropdownButton<String>(
-                    dropdownColor: Theme.of(context).scaffoldBackgroundColor,
-                    menuMaxHeight: 200,
-                    isExpanded: true,
-                    value: dropDownValue,
-                    items: categories
-                        .map((e) => e.title)
-                        .map<DropdownMenuItem<String>>(
-                          (value) => DropdownMenuItem<String>(
-                            value: value,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 50.0),
-                              child: Text(
-                                value,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.copyWith(
-                                      letterSpacing: 2,
-                                    ),
-                              ),
-                            ),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        dropDownValue = value!;
-                      });
-
-                      widget.ref
-                          .read(
-                            currentCategory.notifier,
-                          )
-                          .update(
-                            (state) => state = dropDownValue ?? '',
-                          );
-                      // print(widget.ref.watch(currentCategory));
-                    }),
+            ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: dropDown(
+                  categories: categories,
+                  context: context,
+                  dropDownValue: isNameCategory ? _dropDownValue : 'Shopping',
+                  onChanged: onChanged,
+                ),
               )
             : CategoriesSection(
                 category: widget.category,
@@ -175,46 +186,11 @@ class _ExpenseTapState extends State<ExpenseTap> {
         if (widget.isNav != null)
           Padding(
             padding: const EdgeInsets.all(20.0),
-            child: SizedBox(
-              child: DropdownButton<String>(
-                  dropdownColor: Theme.of(context).scaffoldBackgroundColor,
-                  menuMaxHeight: 200,
-                  isExpanded: true,
-                  value: dropdownValue2,
-                  items: paymentCategory
-                      .map((e) => e.title)
-                      .map<DropdownMenuItem<String>>(
-                        (value) => DropdownMenuItem<String>(
-                          value: value,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 50.0),
-                            child: Text(
-                              value,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                    letterSpacing: 2,
-                                  ),
-                            ),
-                          ),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      dropdownValue2 = value!;
-                    });
-
-                    widget.ref
-                        .read(
-                          paymentName.notifier,
-                        )
-                        .update(
-                          (state) => state = dropdownValue2 ?? '',
-                        );
-                    // print(widget.ref.watch(currentCategory));
-                  }),
+            child: dropDown(
+              categories: paymentCategory,
+              context: context,
+              dropDownValue: isPaymentMethod ? _dropdownValue2 : 'Cash',
+              onChanged: paymentMethod,
             ),
           ),
         const SizedBox(height: 10),

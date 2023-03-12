@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:fintrack/src/core/domain/models/category.dart';
 import 'package:fintrack/src/core/domain/models/entities/transaction_collection.dart';
 import 'package:fintrack/src/core/presentation/provider/themechanges.dart';
@@ -111,8 +109,6 @@ class TransactionList extends HookConsumerWidget {
                   currency: currency,
                 ),
               );
-              log(element.name);
-              log(element.imageUrl!);
             },
           );
         },

@@ -3,22 +3,22 @@
 import 'dart:developer';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:fintrack/src/core/utils/cam.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
-
 import 'package:fintrack/src/core/domain/models/entities/transaction_collection.dart';
 import 'package:fintrack/src/core/presentation/provider/themechanges.dart';
 import 'package:fintrack/src/core/route/route_navigations.dart';
+import 'package:fintrack/src/core/utils/cam.dart';
 import 'package:fintrack/src/core/utils/datatime_format.dart';
 import 'package:fintrack/src/core/utils/extension.dart';
+import 'package:fintrack/src/core/utils/snackbar.dart';
 import 'package:fintrack/src/core/widgets/category_widget.dart';
 import 'package:fintrack/src/features/Transactions/data/provider.dart';
 import 'package:fintrack/src/features/Transactions/presentation/provider/current_page_provider.dart';
 import 'package:fintrack/src/features/Transactions/presentation/widgets/tabs/expense_tab.dart';
 import 'package:fintrack/src/features/Transactions/presentation/widgets/tabs/income_tab.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../../../core/utils/enum.dart';
 
@@ -36,6 +36,7 @@ class AddTransactionsScreen extends StatefulHookConsumerWidget {
     this.categoryTransactionName,
     this.date,
     this.id,
+    this.imagePath,
   }) : _transactionType = transactionType;
 
   final bool? isNav;
@@ -47,6 +48,7 @@ class AddTransactionsScreen extends StatefulHookConsumerWidget {
   final String? _transactionType;
   final String? payMent;
   final int? id;
+  final String? imagePath;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -64,6 +66,8 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
   @override
   void initState() {
     super.initState();
+    ref.read(currentIndex);
+    ref.read(currentCategory);
   }
 
   @override
@@ -80,23 +84,7 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
     final amountController = useTextEditingController();
     final descriptionController = useTextEditingController();
     final imageUrl = ref.watch(imagePath);
-
-    // String imagePath = '';
-
-    // Future<void> getImage() async {
-    //   final ImagePicker picker = ImagePicker();
-    //   final pickedFile = await picker.pickImage(
-    //     source: ImageSource.gallery,
-    //     maxHeight: double.infinity,
-    //     maxWidth: double.infinity,
-    //   );
-
-    //   if (pickedFile != null) {
-    //     ref.read(imagePath.notifier).update(
-    //           (state) => state = pickedFile.path,
-    //         );
-    //   }
-    // }
+    final isNavigated = widget.isNav == true;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -129,37 +117,50 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
               widget.isNav == true
                   ? ref.read(updateTransaction.notifier).updateTransactions(
                         Transaction(
-                          name: nameController.text,
-                          amount: double.parse(amountController.text),
+                          name: nameController.text.isEmpty
+                              ? widget.name!
+                              : nameController.text,
+                          amount: amountController.text.trim().isEmpty
+                              ? widget.amount!.toDouble
+                              : amountController.text.toDouble,
                           date: widget.date!,
                           category: currentTransaction
                               ? categoryName
                               : incomeCategory,
                           transactionType: currentTransactionType.name,
-                          description: descriptionController.text,
-                          imageUrl: imageUrl,
+                          description: descriptionController.text.isEmpty
+                              ? widget.description
+                              : descriptionController.text,
+                          imageUrl: imageUrl ?? widget.imagePath,
                           paymentType: currentTransaction ? payment : null,
                         ),
                         widget.id ?? 0,
                       )
-                  : ref.read(
-                      addTransaction(
-                        Transaction(
-                          name: nameController.text,
-                          amount: double.parse(amountController.text),
-                          date: date,
-                          category: currentTransaction
-                              ? categoryName
-                              : incomeCategory,
-                          transactionType: currentTransactionType.name,
-                          description: descriptionController.text,
-                          imageUrl: imageUrl,
-                          paymentType: currentTransaction ? payment : null,
-                        ),
-                      ),
-                    );
+                  : ref
+                      .read(
+                        addTransaction(
+                          Transaction(
+                            name: nameController.text,
+                            amount: amountController.text.trim().toDouble,
+                            date: date,
+                            category: currentTransaction
+                                ? categoryName
+                                : incomeCategory,
+                            transactionType: currentTransactionType.name,
+                            description: descriptionController.text,
+                            imageUrl: imageUrl,
+                            paymentType: currentTransaction ? payment : null,
+                          ),
+                        ).future,
+                      )
+                      .then((value) => showSnackBar(
+                          context, 'Transaction Added Successfully'));
 
-              context.maybePop();
+              context.maybePop().then((value) => showSnackBar(
+                  context,
+                  widget.isNav == true
+                      ? 'Transaction Edited Successfully'
+                      : 'Transaction Added Successfully'));
 
               log('saved');
               log(imageUrl.toString());
@@ -172,7 +173,7 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
         slivers: [
           SliverAppBar(
             title: Text(
-              'Add Transaction',
+              widget.isNav == true ? 'Edit Transaction' : 'Add Transaction',
               style: Theme.of(context).textTheme.titleMedium,
             ),
             leading: IconButton(
@@ -205,7 +206,9 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           AutoSizeText(
-                            'Date: ${format.dateToString(widget.isNav != null ? widget.date! : date)}',
+                            'Date: ${format.dateToString(
+                              widget.isNav != null ? widget.date! : date,
+                            )}',
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium
@@ -214,7 +217,9 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
                                 ),
                           ),
                           AutoSizeText(
-                            'Time:  ${format.timeToString(widget.isNav != null ? widget.date! : date)}',
+                            'Time:  ${format.timeToString(
+                              widget.isNav != null ? widget.date! : date,
+                            )}',
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium
@@ -241,15 +246,14 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
                           descriptionTextEditingController:
                               descriptionController,
                           onTap: pickedImage,
-                          name: widget.isNav == true ? widget.name : null,
-                          amount: widget.isNav == true ? widget.amount : null,
-                          description:
-                              widget.isNav == true ? widget.description : null,
-                          isNav: widget.isNav == true ? widget.isNav : null,
+                          name: isNavigated ? widget.name : null,
+                          amount: isNavigated ? widget.amount : null,
+                          description: isNavigated ? widget.description : null,
+                          isNav: isNavigated ? widget.isNav : null,
                           categoryTransactionName:
                               widget.categoryTransactionName,
-                          payMethod:
-                              widget.isNav == true ? widget.payMent : null,
+                          payMethod: isNavigated ? widget.payMent : null,
+                          transactionType: currentTransactionType.name,
                         ),
                         IncomeTab(
                           categoryName: categoryName,
@@ -262,6 +266,14 @@ class _AddTransactionsScreenState extends ConsumerState<AddTransactionsScreen> {
                           amountTextEditingController: amountController,
                           descriptionTextEditingController:
                               descriptionController,
+                          onTap: pickedImage,
+                          name: isNavigated ? widget.name : null,
+                          amount: isNavigated ? widget.amount : null,
+                          description: isNavigated ? widget.description : null,
+                          categoryTransactionName:
+                              widget.categoryTransactionName,
+                          isNav: isNavigated ? widget.isNav : null,
+                          // transactionType: currentTransactionType.name,
                         ),
                       ],
                     ),

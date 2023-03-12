@@ -25,7 +25,7 @@ void main() {
   );
 
   runApp(
-    const ProviderScope(
+    ProviderScope(
       // child: DevicePreview(
       //   enabled: !kReleaseMode,
       //   builder: (context) => const MyApp(), // Wrap your app

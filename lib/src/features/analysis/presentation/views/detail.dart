@@ -16,7 +16,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 typedef ChangePeriod = String Function(DateTime);
 final isDeleted = StateProvider<bool>((ref) => false);
 
-class TransactionDetailScreen extends StatefulWidget {
+class TransactionDetailScreen extends StatefulHookConsumerWidget {
   const TransactionDetailScreen(
       {super.key,
       required this.transaction,
@@ -37,14 +37,26 @@ class TransactionDetailScreen extends StatefulWidget {
   final String currency;
 
   @override
-  State<TransactionDetailScreen> createState() =>
-      _TransactionDetailScreenState();
+  TransactionDetailScreenState createState() => TransactionDetailScreenState();
 }
 
-class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
+class TransactionDetailScreenState
+    extends ConsumerState<TransactionDetailScreen> {
   @override
   Widget build(BuildContext context) {
     bool imagesNotNull = widget.transaction.imageUrl != null;
+
+    void deleteTransaction() {
+      ref.read(
+        deleteTransactions(
+          widget.transaction.id,
+        ),
+      );
+
+      ref.read(isDeleted.notifier).update((state) => true);
+      Navigator.pop(context, true);
+    }
+
     return Container(
       height: context
           .getHeight(0.63), //context.getHeight(imagesNotNull ? 0.63 : 0.3),
@@ -147,17 +159,22 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
                 height: context.getHeight(0.4),
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Theme.of(context).primaryColor,
-                    width: 2,
-                  ),
-                ),
-                child: Image.file(
-                  File(widget.transaction.imageUrl!),
-                  fit: BoxFit.cover,
-                  // width: double.infinity,
-                  // height: double.infinity,
-                ),
+                    border: Border.all(
+                      color: Theme.of(context).primaryColor,
+                      width: 2,
+                    ),
+                    image: DecorationImage(
+                      image: FileImage(
+                        File(widget.transaction.imageUrl!),
+                      ),
+                      fit: BoxFit.fill,
+                    )),
+                // child: Image.file(
+                //   File(widget.transaction.imageUrl!),
+                //   fit: BoxFit.fill,
+                //   //width: double.infinity,
+                //   // height: double.infinity,
+                // ),
               )
             else
               Placeholder(
@@ -185,47 +202,13 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
                       child: IconButton(
                         onPressed: () {
                           log(widget.transaction.imageUrl ?? 'h');
-                          showDialog<bool?>(
+                          alertDialog(
+                            content: 'are you sure you want to delete this '
+                                'transaction?',
                             context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                              title: const Text('Delete Transaction'),
-                              backgroundColor:
-                                  Theme.of(context).scaffoldBackgroundColor,
-                              content: Text(
-                                  'Are you sure to delete this Transaction?',
-                                  style: GoogleFonts.roboto(
-                                    color: Theme.of(context).primaryColor,
-                                    fontSize: 12,
-                                  )),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(context, false),
-                                  child: Text(
-                                    'NO',
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    ref.read(
-                                      deleteTransactions(
-                                        widget.transaction.id,
-                                      ),
-                                    );
-
-                                    ref
-                                        .read(isDeleted.notifier)
-                                        .update((state) => true);
-                                    Navigator.pop(context, true);
-                                  },
-                                  child: const Text('Yes',
-                                      style: TextStyle(color: Colors.red)),
-                                ),
-                              ],
-                            ),
+                            ref: ref,
+                            title: 'Delete Transaction',
+                            delete: deleteTransaction,
                           ).then((value) {
                             value ??= isDelete;
                             if (value == true) {
@@ -256,6 +239,9 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
                                     payMent:
                                         widget.transaction.paymentType ?? '',
                                     id: widget.transaction.id,
+                                    imagePath: widget.transaction.imageUrl,
+                                    transactionType:
+                                        widget.transaction.transactionType,
                                   ),
                                 )
                                 .whenComplete(() => Navigator.pop(context));
@@ -269,6 +255,42 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
             }),
           ],
         ),
+      ),
+    );
+  }
+
+  Future<bool?> alertDialog({
+    required BuildContext context,
+    required WidgetRef ref,
+    required Function() delete,
+    required String title,
+    required String content,
+  }) {
+    return showDialog<bool?>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(title),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        content: Text(content,
+            style: GoogleFonts.roboto(
+              color: Theme.of(context).primaryColor,
+              fontSize: 12,
+            )),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(
+              'NO',
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: delete,
+            child: const Text('Yes', style: TextStyle(color: Colors.red)),
+          ),
+        ],
       ),
     );
   }
