@@ -3,15 +3,32 @@ import 'package:fintrack/src/core/utils/extension.dart';
 import 'package:fintrack/src/features/goals/models/goal.dat.dart';
 import 'package:fintrack/src/features/goals/presentation/views/add_goal_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class ChooseGoalScreen extends StatelessWidget {
+import '../../../../core/presentation/provider/themechanges.dart';
+
+class ChooseGoalScreen extends HookConsumerWidget {
   const ChooseGoalScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeModeChecker = ref.watch(themeProvider) == ThemeMode.dark;
+    final Color color = themeModeChecker ? Colors.white : Colors.black;
+
     return Scaffold(
         appBar: AppBar(
-          title: const Text('New Goals'),
+          title: Text(
+            'New Goals',
+            style: TextStyle(color: color),
+          ),
+          leading: IconButton(
+            icon: Icon(
+              PhosphorIcons.arrowBendUpLeft,
+              color: color,
+            ),
+            onPressed: () => context.maybePop(),
+          ),
         ),
         body: Column(
           children: [
@@ -37,11 +54,14 @@ class ChooseGoalScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 30),
-            const Padding(
-              padding: EdgeInsets.only(right: 120.0),
-              child: Text(
-                'What are you saving For?',
-                style: TextStyle(),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: Text(
+                  'What are you saving For?',
+                  style: TextStyle(),
+                ),
               ),
             ),
             const SizedBox(height: 20),

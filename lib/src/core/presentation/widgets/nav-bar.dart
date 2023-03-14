@@ -104,8 +104,8 @@ const List<_Item> _bottomNavigationBarItems = [
     activeIcon: PhosphorIcons.chartBarFill,
   ),
   _Item(
-    'budgets',
-    icon: PhosphorIcons.walletLight,
+    'Goals',
+    icon: PhosphorIcons.chalkboardSimple,
     activeIcon: PhosphorIcons.walletFill,
   ),
   _Item(

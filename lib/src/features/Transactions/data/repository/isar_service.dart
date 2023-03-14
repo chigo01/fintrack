@@ -1,29 +1,18 @@
 import 'package:fintrack/src/core/domain/models/entities/transaction_collection.dart';
+import 'package:fintrack/src/core/utils/isar.dart';
 import 'package:fintrack/src/features/Transactions/data/repository/transaction_repository.dart';
 import 'package:isar/isar.dart';
 
 // DateTime date = DateTime.now();
 
 class IsarServiceRepository implements TransactionRepository {
-  late Future<Isar> db;
-
-  IsarServiceRepository() {
-    db = openIsar();
-  }
-
-  Future<Isar> openIsar() async {
-    if (Isar.instanceNames.isEmpty) {
-      return await Isar.open(
-        [TransactionSchema],
-      );
-    }
-    return Future.value(Isar.getInstance());
-  }
+  // late Future<Isar> db;
+  final db = IsarSingleton();
 
   @override
   Stream<List<Transaction>> getRecentTransactions(
       String transactionType) async* {
-    final isar = await db;
+    final isar = await db.instance;
     final query = isar.transactions
         .where(sort: Sort.desc)
         .filter()
@@ -40,7 +29,7 @@ class IsarServiceRepository implements TransactionRepository {
 
   @override
   Future<void> addTransaction(Transaction transaction) async {
-    final isar = await db;
+    final isar = await db.instance;
     isar.writeTxn(() async {
       await isar.transactions.put(transaction);
     });
@@ -48,7 +37,7 @@ class IsarServiceRepository implements TransactionRepository {
 
   @override
   Future<void> deleteTransaction(int id) async {
-    final isar = await db;
+    final isar = await db.instance;
     isar.writeTxn(() async {
       await isar.transactions.delete(id);
     });
@@ -62,7 +51,7 @@ class IsarServiceRepository implements TransactionRepository {
 
   @override
   Future<void> updateTransaction(Transaction transaction, int id) async {
-    final isar = await db;
+    final isar = await db.instance;
     final transactionId = isar.transactions;
 
     isar.writeTxn(() async {
@@ -83,7 +72,7 @@ class IsarServiceRepository implements TransactionRepository {
 
   @override
   Stream<double> totalTransaction(String transactionType) async* {
-    final isar = await db;
+    final isar = await db.instance;
     final query = isar.transactions
         .filter()
         .transactionTypeEqualTo(
@@ -104,7 +93,7 @@ class IsarServiceRepository implements TransactionRepository {
 
   @override
   Stream<List<Transaction>> getAllTransactions(String transactionType) async* {
-    final isar = await db;
+    final isar = await db.instance;
     final query = isar.transactions
         .where(sort: Sort.desc)
         .filter()

@@ -2,9 +2,9 @@ import 'package:animations/animations.dart';
 import 'package:fintrack/src/core/presentation/provider/themechanges.dart';
 import 'package:fintrack/src/core/presentation/widgets/fab-button.dart';
 import 'package:fintrack/src/core/presentation/widgets/nav-bar.dart';
-import 'package:fintrack/src/features/Profile/profile.dart';
 import 'package:fintrack/src/features/Transactions/presentation/views/home_screen.dart';
 import 'package:fintrack/src/features/analysis/presentation/views/analysis.dart';
+import 'package:fintrack/src/features/goals/presentation/views/all_goals_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -13,7 +13,7 @@ import '../../features/Transactions/theme.dart';
 List<Widget> pages = [
   const HomeScreen(),
   const AnalysisScreen(),
-  const Profile(),
+  const AllGoalsScreen(),
   const LightMode()
 ];
 
